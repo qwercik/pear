@@ -1,0 +1,24 @@
+module(
+    def(fibonacci(0, 0)),
+    def(fibonacci(1, 1)),
+    def(fibonacci(index, value), (
+        gt(index, 1),
+        eval(sub(index, 1), index_1),
+        eval(sub(index, 2), index_2),
+        fibonacci(index_1, value_1),
+        fibonacci(index_2, value_2),
+        eval(add(value_1, value_2), value)
+    )),
+
+    def(main, (
+        print('Program liczy elementy ciągu Fibonacciego'),
+        print('Podaj n: '),
+        read('%d', n),
+        fibonacci(n, value),
+        print('F(%d) = %d', n, value),
+        break()
+    )),
+    def(main, (
+        print('Nie da się policzyć takiej wartości ciągu Fibonacciego :(')
+    )),
+)
