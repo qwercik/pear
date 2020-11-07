@@ -2,6 +2,7 @@
 
 namespace pear::lexer {
     const std::unordered_map<TokenType::Identifier, std::string> TokenType::typesNames = {
+        { TokenType::NEWLINE, "newline" },
         { TokenType::WHITESPACE, "whitespace" },
         { TokenType::IDENTIFIER, "identifier" },
         { TokenType::LEFT_PARENTHESIS, "left parenthesis" },

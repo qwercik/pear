@@ -10,13 +10,16 @@
 namespace pear::lexer {
     Lexer::Lexer(const std::string& code) {
         this->code = code;
+
+        // The priority of rules is important!
         this->tokens = {
+            Token(TokenType::NEWLINE, "\\n"),
             Token(TokenType::WHITESPACE, "\\s+"),
             Token(TokenType::LEFT_PARENTHESIS, "\\("),
             Token(TokenType::RIGHT_PARENTHESIS, "\\)"),
             Token(TokenType::COMMA, ","),
-            Token(TokenType::DECIMAL_NUMBER, "[-+]?[1-9][0-9]*"),
             Token(TokenType::STRING, "\'[^\']*\'"),
+            Token(TokenType::DECIMAL_NUMBER, "[-+]?[1-9][0-9]*"),
             Token(TokenType::IDENTIFIER, "[a-zA-Z][0-9a-zA-Z]*"),
             Token(TokenType::INVALID, ".")
         };
@@ -26,12 +29,25 @@ namespace pear::lexer {
         std::list<Lexeme> lexemes;
 
         std::size_t index = 0;
+        std::size_t lineNumber = 1;
+        std::size_t column = 1;
+
         while (index < this->code.size()) {
             for (const auto& token : this->tokens) {
-                auto matched = token.match(code, index);
+                auto matched = token.match(code, index, lineNumber, column);
                 if (matched) {
-                    lexemes.push_back(*matched);
-                    index += (*matched).getRawCode().size();
+                    auto lexeme = *matched;
+
+                    lexemes.push_back(lexeme);
+                    auto lexemeSize = lexeme.getRawCode().size();
+                    index += lexemeSize;
+                    column += lexemeSize;
+
+                    if (lexeme.getType() == TokenType::NEWLINE) {
+                        lineNumber++;
+                        column = 1;
+                    }
+ 
                     break;
                 }
             }

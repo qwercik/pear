@@ -10,7 +10,7 @@ namespace pear::lexer {
     class Token {
     public:
         Token(TokenType type, const std::string& pattern);
-        std::optional<Lexeme> match(const std::string& code, std::size_t position) const;
+        std::optional<Lexeme> match(const std::string& code, std::size_t position, std::size_t lineNumber, std::size_t column) const;
 
     private:
         TokenType type;

@@ -7,6 +7,7 @@ namespace pear::lexer {
     class TokenType {
     public:
         enum Identifier {
+            NEWLINE,
             WHITESPACE,
             IDENTIFIER,
             LEFT_PARENTHESIS,
