@@ -2,10 +2,11 @@
 #include <pear/lexer/TokenType.hpp>
 
 namespace pear::lexer {
-    Lexeme::Lexeme(TokenType type, const std::string& rawCode, std::size_t position) {
-        this->type = type;
-        this->rawCode = rawCode;
-        this->position = position;
+    Lexeme::Lexeme(TokenType type, const std::string& rawCode, std::size_t position) :
+        type(type),
+        rawCode(rawCode),
+        position(position)
+    {
     }
 
     TokenType Lexeme::getType() const {

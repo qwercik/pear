@@ -6,9 +6,11 @@ add_executable(pear
 
     include/pear/lexer/Lexer.hpp
     include/pear/lexer/Token.hpp
+    include/pear/lexer/TokenType.hpp
     include/pear/lexer/Lexeme.hpp
     src/lexer/Lexer.cpp
     src/lexer/Token.cpp
+    src/lexer/TokenType.cpp
     src/lexer/Lexeme.cpp
 )
 target_include_directories(pear PUBLIC include/)

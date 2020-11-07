@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 
     for (const auto& lexeme : lexemes) {
         if (lexeme.getType() != pear::lexer::TokenType::WHITESPACE) {
-            std::cout << static_cast<int>(lexeme.getType()) << " -> " << lexeme.getRawCode() << " -> " << lexeme.getPosition() << '\n';
+            std::cout << lexeme.getType().getString() << " -> " << lexeme.getRawCode() << " -> " << lexeme.getPosition() << '\n';
         }
     }
 }

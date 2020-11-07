@@ -5,9 +5,10 @@
 #include <pear/lexer/Lexeme.hpp>
 
 namespace pear::lexer {
-    Token::Token(TokenType type, const std::string& pattern) {
-        this->type = type;
-        this->pattern = std::regex("^" + pattern);
+    Token::Token(TokenType type, const std::string& pattern) :
+        type(type),
+        pattern(std::regex("^" + pattern))
+    {
     }
 
     std::optional<Lexeme> Token::match(const std::string& code, std::size_t position) const {
