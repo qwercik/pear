@@ -14,7 +14,8 @@ namespace pear::lexer {
             RIGHT_PARENTHESIS,
             COMMA,
             INVALID,
-            DECIMAL_NUMBER,
+            FLOAT,
+            DECIMAL_INTEGER,
             STRING
         };
 

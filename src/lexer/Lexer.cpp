@@ -19,8 +19,9 @@ namespace pear::lexer {
             Token(TokenType::RIGHT_PARENTHESIS, "\\)"),
             Token(TokenType::COMMA, ","),
             Token(TokenType::STRING, "\'[^\']*\'"),
-            Token(TokenType::DECIMAL_NUMBER, "[-+]?[1-9][0-9]*"),
-            Token(TokenType::IDENTIFIER, "[a-zA-Z][0-9a-zA-Z]*"),
+            Token(TokenType::FLOAT, "[-+]?(?:[1-9][0-9]*|0)\\.[0-9]+"),
+            Token(TokenType::DECIMAL_INTEGER, "[-+]?(?:[1-9][0-9]*|0)"),
+            Token(TokenType::IDENTIFIER, "[a-zA-Z_][0-9a-zA-Z_]*"),
             Token(TokenType::INVALID, ".")
         };
     }

@@ -1,0 +1,12 @@
+module(
+    def(main, (
+        unify(g, 1410.0),
+        unify(w, 997.112),
+        eval(pow(112, 3.5), sth),
+
+        unify(gwc_equation, div(g, w)),
+        eval(gwc_equation, gwc),
+        print('sqrt(2) w przybliżeniu wynosi %f', gwc)
+    ))
+)
+

@@ -9,7 +9,8 @@ namespace pear::lexer {
         { TokenType::RIGHT_PARENTHESIS, "right parenthesis" },
         { TokenType::COMMA, "comma" },
         { TokenType::INVALID, "invalid token" },
-        { TokenType::DECIMAL_NUMBER, "decimal number" },
+        { TokenType::FLOAT, "floatpoint number" },
+        { TokenType::DECIMAL_INTEGER, "decimal integer" },
         { TokenType::STRING, "string" }
     };
 
