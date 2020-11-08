@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <pear/lexer/TokenType.hpp>
 
 namespace pear::lexer {
@@ -24,6 +25,21 @@ namespace pear::lexer {
 
     std::string TokenType::getString() const {
         return TokenType::typesNames.at(this->getIdentifier());
+    }
+
+    bool TokenType::isIdentifier() const {
+        return this->getIdentifier() == IDENTIFIER;
+    }
+
+    bool TokenType::isLiteral() const {
+        auto literalTypes = {FLOAT, DECIMAL_INTEGER, STRING};
+        auto iterator = std::find(
+            std::begin(literalTypes),
+            std::end(literalTypes),
+            this->getIdentifier()
+        );
+
+        return iterator != std::end(literalTypes);
     }
 
     bool TokenType::operator==(const TokenType& other) const {

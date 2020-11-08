@@ -23,7 +23,10 @@ namespace pear::lexer {
 
         Identifier getIdentifier() const;
         std::string getString() const;
-        
+
+        bool isIdentifier() const;
+        bool isLiteral() const;
+ 
         bool operator==(const TokenType& other) const;
         bool operator!=(const TokenType& other) const;
 

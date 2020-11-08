@@ -3,6 +3,7 @@
 #include <pear/lexer/Lexer.hpp>
 #include <pear/lexer/Lexeme.hpp>
 #include <pear/lexer/TokenType.hpp>
+#include <pear/parser/Parser.hpp>
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -18,10 +19,7 @@ int main(int argc, char *argv[]) {
     pear::lexer::Lexer lexer(code);
     auto lexemes = lexer.run();
 
-    for (const auto& lexeme : lexemes) {
-        if (lexeme.getType() != pear::lexer::TokenType::WHITESPACE) {
-            std::cout << "\"" << lexeme.getType().getString() << "\":" << lexeme.getLineNumber() << ":" << lexeme.getColumn() << "\t\t -> \t\t" << lexeme.getRawCode() << '\n';
-        }
-    }
+    pear::parser::Parser parser(lexemes);
+    auto ast = parser.run();
 }
 
