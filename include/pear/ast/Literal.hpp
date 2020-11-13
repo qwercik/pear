@@ -17,6 +17,6 @@ namespace pear::ast {
 
     private:
         T value;
-    }
+    };
 }
 

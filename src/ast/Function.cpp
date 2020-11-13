@@ -1,3 +1,4 @@
+#include <string>
 #include <pear/ast/Function.hpp>
 
 namespace pear::ast {

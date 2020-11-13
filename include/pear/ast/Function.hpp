@@ -16,6 +16,6 @@ namespace pear::ast {
     private:
         std::string name;
         std::list<Term> arguments;
-    }
+    };
 }
 

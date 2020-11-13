@@ -12,6 +12,15 @@ add_executable(pear
     src/lexer/Token.cpp
     src/lexer/TokenType.cpp
     src/lexer/Lexeme.cpp
+
+    include/pear/ast/Term.hpp
+    include/pear/ast/Function.hpp
+    include/pear/ast/Literal.hpp
+    src/ast/Function.cpp
+
+    include/pear/parser/Parser.hpp
+    include/pear/parser/ParserException.hpp
+    src/parser/Parser.cpp
 )
 target_include_directories(pear PUBLIC include/)
 

@@ -11,6 +11,6 @@ namespace pear::ast {
 
     private:
         std::string name;
-    }
+    };
 }
 
