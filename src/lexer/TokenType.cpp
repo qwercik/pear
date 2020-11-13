@@ -42,6 +42,21 @@ namespace pear::lexer {
         return iterator != std::end(literalTypes);
     }
 
+    bool TokenType::isScalar() const {
+        return this->isIdentifier() || this->isLiteral();
+    }
+
+    bool TokenType::isOperator() const {
+        auto operatorTypes = {LEFT_PARENTHESIS, RIGHT_PARENTHESIS, COMMA};
+        auto iterator = std::find(
+            std::begin(operatorTypes),
+            std::end(operatorTypes),
+            this->getIdentifier()
+        );
+
+        return iterator != std::end(operatorTypes);
+    }
+
     bool TokenType::operator==(const TokenType& other) const {
         return this->getIdentifier() == other.getIdentifier();
     }

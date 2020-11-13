@@ -26,6 +26,8 @@ namespace pear::lexer {
 
         bool isIdentifier() const;
         bool isLiteral() const;
+        bool isScalar() const;
+        bool isOperator() const;
  
         bool operator==(const TokenType& other) const;
         bool operator!=(const TokenType& other) const;

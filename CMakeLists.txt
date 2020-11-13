@@ -13,10 +13,10 @@ add_executable(pear
     src/lexer/TokenType.cpp
     src/lexer/Lexeme.cpp
 
-    include/pear/ast/Term.hpp
-    include/pear/ast/Function.hpp
-    include/pear/ast/Literal.hpp
-    src/ast/Function.cpp
+    include/pear/ast/AbstractSyntaxTree.hpp
+    include/pear/ast/Node.hpp
+    src/ast/AbstractSyntaxTree.cpp
+    src/ast/Node.cpp
 
     include/pear/parser/Parser.hpp
     include/pear/parser/ParserException.hpp
