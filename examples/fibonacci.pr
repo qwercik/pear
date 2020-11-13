@@ -1,7 +1,7 @@
 module(
     def(fibonacci(0, 0)),
     def(fibonacci(1, 1)),
-    def(fibonacci(index, value), (
+    def(fibonacci(index, value), block(
         gt(index, 1),
         eval(sub(index, 1), index_1),
         eval(sub(index, 2), index_2),
@@ -10,7 +10,7 @@ module(
         eval(add(value_1, value_2), value)
     )),
 
-    def(main, (
+    def(main, block(
         print('Program liczy elementy ciągu Fibonacciego'),
         print('Podaj n: '),
         read('%d', n),
@@ -18,7 +18,7 @@ module(
         print('F(%d) = %d', n, value),
         break()
     )),
-    def(main, (
+    def(main, block(
         print('Nie da się policzyć takiej wartości ciągu Fibonacciego :(')
-    )),
+    ))
 )

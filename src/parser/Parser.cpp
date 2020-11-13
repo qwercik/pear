@@ -7,133 +7,68 @@
 #include <pear/parser/Parser.hpp>
 #include <pear/parser/ParserException.hpp>
 #include <pear/ast/Node.hpp>
-
-template <typename Iterator, typename Function>
-void iterateOverAdjacentPairs(Iterator start, Iterator end, Function callback) {
-    if (start != end) {
-        Iterator predecessor = start;
-        Iterator successor = std::next(predecessor);
-
-        for (; successor != end; predecessor++, successor++) {
-            callback(*predecessor, *successor);
-        }
-    }
-}
-
+#include <iostream>
 
 namespace pear::parser {
     Parser::Parser(const std::list<lexer::Lexeme>& lexemes) :
         lexemes(lexemes),
-        current(&root)
+        current(&root),
+        previousLexeme(nullptr)
     {
     }
 
     ast::AbstractSyntaxTree Parser::run() {
-        iterateOverAdjacentPairs(
-            std::begin(this->lexemes),
-            std::end(this->lexemes),
-            [&](const lexer::Lexeme& predecessor, const lexer::Lexeme& successor) {
-                if (!predecessor.getType().isWhitespace() && !successor.getType().isWhitespace()) {
-                    std::cout << predecessor.getRawCode() << " " << successor.getRawCode() << std::endl;
-                    this->handlePairOfLexemes(predecessor, successor);
-                }
+        if (!lexemes.front().getType().isIdentifier()) {
+            throw ParserException("First token should always be an identifier");
+        }
+        previousLexeme = &lexemes.front();
+
+        for (auto it = std::next(this->lexemes.begin()); it != this->lexemes.end(); it++) {
+            auto lexeme = *it;
+            if (!lexeme.getType().isWhitespace()) {
+                //std::cout << "\"" << previousLexeme->getRawCode() << "\" -> \"" << lexeme.getRawCode() << "\"" << '\n';
+
+                handleLexeme(lexeme);
+                previousLexeme = &*it;
             }
-        );
+        }
 
         return this->root;
     }
+
+    void Parser::handleLexeme(const lexer::Lexeme& currentLexeme) {
+        auto currentLexemeType = currentLexeme.getType();
+        auto previousLexemeType = this->previousLexeme->getType();
     
-    void Parser::handlePairOfLexemes(const lexer::Lexeme& predecessor, const lexer::Lexeme& successor) {
-        // TODO: filter whitespaces
-        auto predecessorType = predecessor.getType();
-        auto successorType = successor.getType();
-
-        if (predecessorType.isIdentifier()) {
-            if (successorType.isScalar()) {
-                throw ParserException("ID SC");
-            } else if (successorType == lexer::TokenType::COMMA) {
-                // Trzeba dodać nową zmienną z leksemem predecessor
-                // Należy przy tym sprawdzić, czy znajdujemy się wewnątrz jakiejś funkcji
-                // Inaczej należy wyrzucić błąd
-                if (current == &root) {
-                    throw ParserException("Not inside function");
-                }
-
-                current->addNextChild(new ast::Node(ast::Node::Type::VARIABLE, predecessor));
-            } else if (successorType == lexer::TokenType::LEFT_PARENTHESIS) {
-                // Trzeba dodać nową funkcję z leksemem predecessor
-                current = current->addNextChild(new ast::Node(ast::Node::Type::FUNCTION, predecessor));
-            } else if (successorType == lexer::TokenType::RIGHT_PARENTHESIS) {
-                // Trzeba dodać nową zmienną z leksemem predecessor
-                // Należy przy tym sprawdzić, czy znajdujemy się wewnątrz jakiejś funkcji
-                // Inaczej należy wyrzucić błąd
-                if (!current->hasParent()) {
-                    throw ParserException("Not inside function");
-                }
-
-                current->addNextChild(new ast::Node(ast::Node::Type::VARIABLE, predecessor));
-
-                // Poza tym należy wrócić do funkcji rodzica
-                current = current->getParent();
+        if (currentLexemeType.isScalar() && previousLexemeType.isScalar()) {
+            throw ParserException("scalar near by scalar");
+        } else if (currentLexemeType == lexer::TokenType::LEFT_PARENTHESIS) {
+            if (!previousLexemeType.isIdentifier()) {
+                throw ParserException("wystąpił błąd");
             }
-        } else if (predecessorType.isLiteral()) {
-            if (successorType.isScalar()) {
-                throw ParserException("LT SC");
-            } else if (successorType == lexer::TokenType::COMMA) {
-                // Trzeba dodać literał z leksemem predecessor
-                // Należy przy tym sprawdzić, czy znajdujemy się wewnątrz jakiejś funkcji
-                // Inaczej należy wyrzucić błąd
-                if (!current->hasParent()) {
-                    throw ParserException("Not inside function");
-                }
 
-                current->addNextChild(new ast::Node(ast::Node::Type::LITERAL, predecessor));
-            } else if (successorType == lexer::TokenType::LEFT_PARENTHESIS) {
-                throw ParserException("LT LP");
-            } else if (successorType == lexer::TokenType::RIGHT_PARENTHESIS) {
-                // Trzeba dodać literał z leksemem predecessor
-                // Należy przy tym sprawdzić, czy znajdujemy się wewnątrz jakiejś funkcji
-                // Inaczej należy wyrzucić błąd
-                if (!current->hasParent()) {
-                    throw ParserException("Not inside function");
-                }
-
-                current->addNextChild(new ast::Node(ast::Node::Type::LITERAL, predecessor));
-
-                // Poza tym, należy wrócić do funkcji rodzica
-                current = current->getParent();
+            current = current->addNextChild(new ast::Node(ast::Node::Type::FUNCTION, *previousLexeme));
+        } else if (currentLexemeType == lexer::TokenType::RIGHT_PARENTHESIS) {
+            if (!current->hasParent()) {
+                throw ParserException("hasParent");
+            } else if (previousLexemeType == lexer::TokenType::COMMA) {
+                throw ParserException("comma before right parenthesis");
+            } else if (previousLexemeType == lexer::TokenType::IDENTIFIER) {
+                current->addNextChild(new ast::Node(ast::Node::Type::VARIABLE, *previousLexeme));
+            } else if (previousLexemeType.isLiteral()) {
+                current->addNextChild(new ast::Node(ast::Node::Type::LITERAL, *previousLexeme));
             }
-        } else if (predecessorType == lexer::TokenType::COMMA) {
-            if (successorType == lexer::TokenType::COMMA) {
-                throw ParserException("CM CM");
-            } else if (successorType == lexer::TokenType::LEFT_PARENTHESIS) {
-                throw ParserException("CM LP");
-            } else if (successorType == lexer::TokenType::RIGHT_PARENTHESIS) {
-                throw ParserException("CM RP");
-            }
-        } else if (predecessorType == lexer::TokenType::LEFT_PARENTHESIS) {
-            if (successorType == lexer::TokenType::COMMA) {
-                throw ParserException("LP CM");
-            } else if (successorType == lexer::TokenType::LEFT_PARENTHESIS) {
-                throw ParserException("LP LP");
-            } else if (successorType == lexer::TokenType::RIGHT_PARENTHESIS) {
-                // Trzeba wrócić do funkcji rodzica
-                if (!current->hasParent()) {
-                    throw ParserException("Not inside function");
-                }
-                current = current->getParent();
-            }
-        } else if (predecessorType == lexer::TokenType::RIGHT_PARENTHESIS) {
-            if (successorType.isScalar()) {
-                throw ParserException("RP SC");
-            } else if (successorType == lexer::TokenType::LEFT_PARENTHESIS) {
-                throw ParserException("RP LP");
-            } else if (successorType == lexer::TokenType::RIGHT_PARENTHESIS) {
-                // Trzeba wrócić do funkcji rodzica
-                if (!current->hasParent()) {
-                    throw ParserException("Not inside function");
-                }
-                current = current->getParent();
+ 
+            current = current->getParent();
+        } else if (currentLexemeType == lexer::TokenType::COMMA) {
+            if (previousLexemeType == lexer::TokenType::COMMA) {
+                throw ParserException("comma before comma");
+            } else if (previousLexemeType == lexer::TokenType::LEFT_PARENTHESIS) {
+                throw ParserException("left parenthesis befor comma");
+            } else if (previousLexemeType == lexer::TokenType::IDENTIFIER) {
+                current->addNextChild(new ast::Node(ast::Node::Type::VARIABLE, *previousLexeme));
+            } else if (previousLexemeType.isLiteral()) {
+                current->addNextChild(new ast::Node(ast::Node::Type::LITERAL, *previousLexeme));
             }
         }
     }

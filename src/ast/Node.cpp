@@ -32,6 +32,7 @@ namespace pear::ast {
     }
 
     Node *Node::addNextChild(Node *child) {
+        child->parent = this;
         this->children.emplace_back(child);
         return child;
     }
