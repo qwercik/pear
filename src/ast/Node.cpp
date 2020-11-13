@@ -19,7 +19,7 @@ namespace pear::ast {
         return this->lexeme;
     }
     
-    Node::NodePointer Node::getParent() const {
+    Node *Node::getParent() const {
         return this->parent;
     }
 
@@ -27,14 +27,13 @@ namespace pear::ast {
         return this->parent;
     }
 
-    const Node::ChildrenList& Node::getChildren() const {
+    const std::list<std::shared_ptr<Node>>& Node::getChildren() const {
         return this->children;
     }
 
-    Node::NodePointer Node::addNextChild(Node::ChildNodePointer child) {
-        this->children.push_back(std::move(child));
-        child->parent = this;
-        return this;
+    Node *Node::addNextChild(Node *child) {
+        this->children.emplace_back(child);
+        return child;
     }
 }
 

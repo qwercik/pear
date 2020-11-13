@@ -11,13 +11,10 @@ namespace pear::parser {
         ast::AbstractSyntaxTree run();
 
     private:
-        bool handlingFirstLexeme() const;
-        void handleLexeme(const lexer::Lexeme& lexeme);
+        void handlePairOfLexemes(const lexer::Lexeme& predecessor, const lexer::Lexeme& successor);
 
         std::list<lexer::Lexeme> lexemes;
-
         ast::AbstractSyntaxTree root;
-        ast::Node *currentNode;
-        lexer::Lexeme *previousLexeme;
+        ast::Node *current;
     };
 }

@@ -1,4 +1,3 @@
-#include <memory>
 #include <pear/lexer/Lexeme.hpp>
 #include <pear/ast/AbstractSyntaxTree.hpp>
 

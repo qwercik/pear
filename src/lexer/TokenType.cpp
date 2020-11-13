@@ -57,6 +57,14 @@ namespace pear::lexer {
         return iterator != std::end(operatorTypes);
     }
 
+    bool TokenType::isWhitespace() const {
+        return this->getIdentifier() == WHITESPACE || this->getIdentifier() == NEWLINE;
+    }
+
+    bool TokenType::isInvalid() const {
+        return this->getIdentifier() == INVALID;
+    }
+
     bool TokenType::operator==(const TokenType& other) const {
         return this->getIdentifier() == other.getIdentifier();
     }

@@ -1,15 +1,12 @@
 #pragma once
 
+#include <list>
 #include <memory>
 #include <pear/lexer/Lexeme.hpp>
 
 namespace pear::ast {
     class Node {
     public:
-        using NodePointer = Node*;
-        using ChildNodePointer = std::unique_ptr<Node>;
-        using ChildrenList = std::list<ChildNodePointer>;
-
         enum class Type {
             VARIABLE,
             FUNCTION,
@@ -20,16 +17,16 @@ namespace pear::ast {
         
         Type getType() const;
         const lexer::Lexeme& getLexeme() const;
-        NodePointer getParent() const;
+        Node *getParent() const;
         bool hasParent() const;
-        const ChildrenList& getChildren() const;
+        const std::list<std::shared_ptr<Node>>& getChildren() const;
 
-        NodePointer addNextChild(ChildNodePointer child);
+        Node *addNextChild(Node *child);
 
     private:
         Type type;
         lexer::Lexeme lexeme;
-        NodePointer parent;
-        ChildrenList children;
+        Node *parent;
+        std::list<std::shared_ptr<Node>> children;
     };
 }

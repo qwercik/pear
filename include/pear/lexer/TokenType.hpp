@@ -28,6 +28,8 @@ namespace pear::lexer {
         bool isLiteral() const;
         bool isScalar() const;
         bool isOperator() const;
+        bool isWhitespace() const;
+        bool isInvalid() const;
  
         bool operator==(const TokenType& other) const;
         bool operator!=(const TokenType& other) const;
