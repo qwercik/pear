@@ -24,11 +24,8 @@ namespace pear::parser {
         previousLexeme = &lexemes.front();
 
         for (auto it = std::next(this->lexemes.begin()); it != this->lexemes.end(); it++) {
-            auto lexeme = *it;
-            if (!lexeme.getType().isWhitespace()) {
-                //std::cout << "\"" << previousLexeme->getRawCode() << "\" -> \"" << lexeme.getRawCode() << "\"" << '\n';
-
-                handleLexeme(lexeme);
+            if (!it->getType().isWhitespace()) {
+                handleLexeme(*it);
                 previousLexeme = &*it;
             }
         }
