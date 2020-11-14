@@ -13,6 +13,15 @@ add_executable(pear
     src/lexer/Token.cpp
     src/lexer/Lexeme.cpp
     src/lexer/LexemePosition.cpp
+
+    include/pear/ast/Node.hpp
+    include/pear/ast/NodePrinter.hpp
+    src/ast/Node.cpp
+    src/ast/NodePrinter.cpp
+
+    include/pear/parser/Parser.hpp
+    include/pear/parser/ParserException.hpp
+    src/parser/Parser.cpp
 )
 target_include_directories(pear PUBLIC include/)
 

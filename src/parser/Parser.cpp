@@ -3,7 +3,6 @@
 #include <string>
 #include <iostream>
 #include <pear/lexer/Lexeme.hpp>
-#include <pear/lexer/TokenType.hpp>
 #include <pear/parser/Parser.hpp>
 #include <pear/parser/ParserException.hpp>
 #include <pear/ast/Node.hpp>
@@ -12,19 +11,20 @@
 namespace pear::parser {
     Parser::Parser(const std::list<lexer::Lexeme>& lexemes) :
         lexemes(lexemes),
-        current(&root),
+        root(std::make_shared<ast::Node>()),
+        current(root.get()),
         previousLexeme(nullptr)
     {
     }
 
-    ast::Tree Parser::run() {
-        if (!lexemes.front().getType().isIdentifier()) {
+    std::shared_ptr<ast::Node> Parser::run() {
+        if (!lexemes.front().getToken().isIdentifier()) {
             throw ParserException("First token should always be an identifier");
         }
         previousLexeme = &lexemes.front();
 
         for (auto it = std::next(this->lexemes.begin()); it != this->lexemes.end(); it++) {
-            if (!it->getType().isWhitespace()) {
+            if (!it->getToken().isWhitespace()) {
                 handleLexeme(*it);
                 previousLexeme = &*it;
             }
@@ -34,39 +34,36 @@ namespace pear::parser {
     }
 
     void Parser::handleLexeme(const lexer::Lexeme& currentLexeme) {
-        auto currentLexemeType = currentLexeme.getType();
-        auto previousLexemeType = this->previousLexeme->getType();
+        auto currentToken = currentLexeme.getToken();
+        auto previousToken = this->previousLexeme->getToken();
     
-        if (currentLexemeType.isScalar() && previousLexemeType.isScalar()) {
+        if (currentToken.isScalar() && previousToken.isScalar()) {
             throw ParserException("scalar near by scalar");
-        } else if (currentLexemeType == lexer::TokenType::LEFT_PARENTHESIS) {
-            if (!previousLexemeType.isIdentifier()) {
+        } else if (currentToken.getType() == lexer::Token::Type::LEFT_PARENTHESIS) {
+            if (!previousToken.isIdentifier()) {
                 throw ParserException("wystąpił błąd");
             }
 
-            current = current->addNextChild(new ast::Node(ast::Node::Type::FUNCTION, *previousLexeme));
-        } else if (currentLexemeType == lexer::TokenType::RIGHT_PARENTHESIS) {
+            current = current->addNextChild(new ast::Node(*previousLexeme));
+        } else if (currentToken.getType() == lexer::Token::Type::RIGHT_PARENTHESIS) {
             if (!current->hasParent()) {
                 throw ParserException("hasParent");
-            } else if (previousLexemeType == lexer::TokenType::COMMA) {
+            } else if (previousToken.getType() == lexer::Token::Type::COMMA) {
                 throw ParserException("comma before right parenthesis");
-            } else if (previousLexemeType == lexer::TokenType::IDENTIFIER) {
-                current->addNextChild(new ast::Node(ast::Node::Type::VARIABLE, *previousLexeme));
-            } else if (previousLexemeType.isLiteral()) {
-                current->addNextChild(new ast::Node(ast::Node::Type::LITERAL, *previousLexeme));
+            } else if (previousToken.isScalar()) {
+                current->addNextChild(new ast::Node(*previousLexeme));
             }
  
             current = current->getParent();
-        } else if (currentLexemeType == lexer::TokenType::COMMA) {
-            if (previousLexemeType == lexer::TokenType::COMMA) {
+        } else if (currentToken.getType() == lexer::Token::Type::COMMA) {
+            if (previousToken.getType() == lexer::Token::Type::COMMA) {
                 throw ParserException("comma before comma");
-            } else if (previousLexemeType == lexer::TokenType::LEFT_PARENTHESIS) {
+            } else if (previousToken.getType() == lexer::Token::Type::LEFT_PARENTHESIS) {
                 throw ParserException("left parenthesis befor comma");
-            } else if (previousLexemeType == lexer::TokenType::IDENTIFIER) {
-                current->addNextChild(new ast::Node(ast::Node::Type::VARIABLE, *previousLexeme));
-            } else if (previousLexemeType.isLiteral()) {
-                current->addNextChild(new ast::Node(ast::Node::Type::LITERAL, *previousLexeme));
+            } else if (previousToken.isScalar()) {
+                current->addNextChild(new ast::Node(*previousLexeme));
             }
         }
     }
 }
+

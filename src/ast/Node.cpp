@@ -4,37 +4,43 @@
 #include <pear/ast/Node.hpp>
 
 namespace pear::ast {
-    Node::Node(Node::Type type, const lexer::Lexeme& lexeme) :
-        type(type),
-        lexeme(lexeme),
-        parent(nullptr)
+    Node::Node(const lexer::Lexeme& lexeme) :
+        lexeme(lexeme)
     {
-    }
-    
-    Node::Type Node::getType() const {
-        return this->type;
     }
 
     const lexer::Lexeme& Node::getLexeme() const {
         return this->lexeme;
+    }
+
+    bool Node::hasParent() const {
+        return this->parent;
     }
     
     Node *Node::getParent() const {
         return this->parent;
     }
 
-    bool Node::hasParent() const {
-        return this->parent;
+    Node *Node::addNextChild(Node *child) {
+        child->parent = this;
+        this->children.emplace_back(child);
+        return child;
     }
 
     const std::list<std::shared_ptr<Node>>& Node::getChildren() const {
         return this->children;
     }
 
-    Node *Node::addNextChild(Node *child) {
-        child->parent = this;
-        this->children.emplace_back(child);
-        return child;
+    bool Node::isVariable() const {
+        return this->lexeme.getToken().isIdentifier() && this->children.empty();
+    }
+
+    bool Node::isLiteral() const {
+        return this->lexeme.getToken().isLiteral();
+    }
+
+    bool Node::isFunction() const {
+        return this->lexeme.getToken().isIdentifier() && !this->children.empty();
     }
 }
 

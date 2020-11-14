@@ -25,6 +25,7 @@ namespace pear::lexer {
             INVALID
         };
 
+        Token() = default;
         Token(Type type, const std::string& description, const std::string& pattern);
 
         bool match(const std::string& code, std::size_t position, std::string& match) const;

@@ -7,26 +7,24 @@
 namespace pear::ast {
     class Node {
     public:
-        enum class Type {
-            VARIABLE,
-            FUNCTION,
-            LITERAL
-        };
-
-        Node(Type type, const lexer::Lexeme& lexeme);
-        
-        Type getType() const;
+        Node() = default;
+        Node(const lexer::Lexeme& lexeme);
+ 
         const lexer::Lexeme& getLexeme() const;
-        Node *getParent() const;
+
         bool hasParent() const;
-        const std::list<std::shared_ptr<Node>>& getChildren() const;
+        Node *getParent() const;
 
         Node *addNextChild(Node *child);
+        const std::list<std::shared_ptr<Node>>& getChildren() const;
+
+        bool isVariable() const;
+        bool isLiteral() const;
+        bool isFunction() const;
 
     private:
-        Type type;
         lexer::Lexeme lexeme;
-        Node *parent;
+        Node *parent = nullptr;
         std::list<std::shared_ptr<Node>> children;
     };
 }

@@ -1,3 +1,4 @@
+#include <pear/lexer/Lexeme.hpp>
 #include <pear/ast/Node.hpp>
 #include <pear/ast/NodePrinter.hpp>
 
@@ -8,12 +9,12 @@ namespace pear::ast {
     }
 
     void NodePrinter::print(std::ostream& stream, const Node *node) {
-        if (node->getType() == pear::ast::Node::Type::VARIABLE) {
-            stream << node->getLexeme().getRawCode();
-        } else if (node->getType() == pear::ast::Node::Type::LITERAL) {
-            stream << node->getLexeme().getRawCode();
+        if (node->isVariable()) {
+            stream << node->getLexeme().getContent();
+        } else if (node->isLiteral()) {
+            stream << node->getLexeme().getContent();
         } else {
-            stream << node->getLexeme().getRawCode() << "(";
+            stream << node->getLexeme().getContent() << "(";
             
             auto children = node->getChildren();
             if (!children.empty()) {
