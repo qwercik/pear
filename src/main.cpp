@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <fstream>
 #include <pear/lexer/Lexer.hpp>
 #include <pear/lexer/Lexeme.hpp>
@@ -14,10 +15,17 @@ void printAst(const pear::ast::Node *node) {
         std::cout << node->getLexeme().getRawCode();
     } else {
         std::cout << node->getLexeme().getRawCode() << "(";
+        
+        auto children = node->getChildren();
+        if (!children.empty()) {
+            auto it = children.begin();
+            printAst(it->get());
+            it++;
 
-        for (const auto& child : node->getChildren()) {
-            printAst(child.get());
-            std::cout << ", ";
+            for (; it != children.end(); it++) {
+                std::cout << ", ";
+                printAst(it->get());
+            }
         }
 
         std::cout << ")";
@@ -33,6 +41,11 @@ int main(int argc, char *argv[]) {
 
     std::string path = argv[1];
     std::ifstream file(path);
+    if (!file.is_open()) {
+        std::cerr << "Invalid file\n";
+        return 1;
+    }
+
     std::string code((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
     pear::lexer::Lexer lexer(code);
@@ -42,5 +55,6 @@ int main(int argc, char *argv[]) {
     auto ast = parser.run();
 
     printAst(&ast);
+    std::cout << '\n';
 }
 
