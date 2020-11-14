@@ -21,11 +21,5 @@ int main(int argc, char *argv[]) {
 
     pear::lexer::Lexer lexer(code);
     auto lexemes = lexer.run();
-
-    for (const auto& lexeme : lexemes) {
-        if (lexeme.getToken().isWhitespace()) continue;
-
-        std::cout << "\"" << lexeme.getToken().getDescription() << "\": " << ' ' << lexeme.getContent() << '\n';
-    }
 }
 

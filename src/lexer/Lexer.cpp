@@ -39,8 +39,6 @@ namespace pear::lexer {
                     lexeme.updateGlobalLexerPosition(position);
                     lexemes.push_back(lexeme);
 
-                    std::cerr << (int)lexeme.getToken().getType() << ' ' << (int)Token::Type::INVALID << std::endl;
-
                     if (lexeme.getToken().getType() == Token::Type::INVALID) {
                         throw LexerException("Invalid token starting with \'" + lexeme.getContent() + "\'");
                     }
