@@ -1,7 +1,7 @@
 #include <pear/ast/TreePrinter.hpp>
 
 namespace pear::ast {
-    TreePrinter::TreePrinter(const AbstractSyntaxTree& tree) :
+    TreePrinter::TreePrinter(const Tree& tree) :
         tree(tree)
     {
     }

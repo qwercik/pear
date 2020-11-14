@@ -5,8 +5,8 @@
 #include <pear/ast/Node.hpp>
 
 namespace pear::ast {
-    class AbstractSyntaxTree : public Node {
+    class Tree : public Node {
     public:
-        AbstractSyntaxTree();
+        Tree();
     };
 }

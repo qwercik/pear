@@ -1,8 +1,8 @@
 #include <pear/lexer/Lexeme.hpp>
-#include <pear/ast/AbstractSyntaxTree.hpp>
+#include <pear/ast/Tree.hpp>
 
 namespace pear::ast {
-    AbstractSyntaxTree::AbstractSyntaxTree() :
+    Tree::Tree() :
         Node(Type::FUNCTION, lexer::Lexeme(lexer::TokenType::IDENTIFIER, "code", 0, 0, 0))
     {
     }

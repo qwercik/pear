@@ -4,7 +4,7 @@
 #include <pear/lexer/Lexer.hpp>
 #include <pear/lexer/Lexeme.hpp>
 #include <pear/lexer/TokenType.hpp>
-#include <pear/ast/AbstractSyntaxTree.hpp>
+#include <pear/ast/Tree.hpp>
 #include <pear/ast/NodePrinter.hpp>
 #include <pear/ast/Node.hpp>
 #include <pear/parser/Parser.hpp>

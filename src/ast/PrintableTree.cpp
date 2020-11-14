@@ -1,10 +1,10 @@
 #include <iostream>
-#include <pear/ast/AbstractSyntaxTree.hpp>
+#include <pear/ast/Tree.hpp>
 #include <pear/ast/Node.hpp>
 #include <pear/ast/PrintableTree.hpp>
 
 namespace pear::ast {
-    PrintableTree::PrintableTree(const AbstractSyntaxTree& tree) :
+    PrintableTree::PrintableTree(const Tree& tree) :
         tree(tree)
     {
     }

@@ -17,7 +17,7 @@ namespace pear::parser {
     {
     }
 
-    ast::AbstractSyntaxTree Parser::run() {
+    ast::Tree Parser::run() {
         if (!lexemes.front().getType().isIdentifier()) {
             throw ParserException("First token should always be an identifier");
         }

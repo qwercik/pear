@@ -1,19 +1,19 @@
 #pragma once
 
-#include <pear/ast/AbstractSyntaxTree.hpp>
+#include <pear/ast/Tree.hpp>
 #include <pear/ast/Node.hpp>
 #include <iostream>
 
 namespace pear::ast {
-    class PrintableTree : public AbstractSyntaxTree {
+    class PrintableTree : public Tree {
     public:
-        PrintableTree(const AbstractSyntaxTree& tree);
+        PrintableTree(const Tree& tree);
         friend std::ostream& operator<<(std::ostream& stream, const PrintableTree& tree);
 
     private:
         void print(const Node *node) const;
 
-        AbstractSyntaxTree tree;
+        Tree tree;
     };
 }
 
