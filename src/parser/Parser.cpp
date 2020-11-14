@@ -11,13 +11,13 @@
 namespace pear::parser {
     Parser::Parser(const std::list<lexer::Lexeme>& lexemes) :
         lexemes(lexemes),
-        root(std::make_shared<ast::Node>()),
+        root(std::make_unique<ast::Node>()),
         current(root.get()),
         previousLexeme(nullptr)
     {
     }
 
-    std::shared_ptr<ast::Node> Parser::run() {
+    std::unique_ptr<ast::Node> Parser::run() {
         if (!lexemes.front().getToken().isIdentifier()) {
             throw ParserException("First token should always be an identifier");
         }
@@ -30,7 +30,7 @@ namespace pear::parser {
             }
         }
 
-        return this->root;
+        return std::move(this->root);
     }
 
     void Parser::handleLexeme(const lexer::Lexeme& currentLexeme) {

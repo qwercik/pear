@@ -8,13 +8,13 @@ namespace pear::parser {
     class Parser {
     public:
         Parser(const std::list<lexer::Lexeme>& lexemes);
-        std::shared_ptr<ast::Node> run();
+        std::unique_ptr<ast::Node> run();
 
     private:
         void handleLexeme(const lexer::Lexeme& lexeme);
 
         std::list<lexer::Lexeme> lexemes;
-        std::shared_ptr<ast::Node> root;
+        std::unique_ptr<ast::Node> root;
         ast::Node *current;
         lexer::Lexeme *previousLexeme;
     };
