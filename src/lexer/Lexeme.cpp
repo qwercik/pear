@@ -1,34 +1,35 @@
 #include <pear/lexer/Lexeme.hpp>
-#include <pear/lexer/TokenType.hpp>
+#include <pear/lexer/LexemePosition.hpp>
 
 namespace pear::lexer {
-    Lexeme::Lexeme(TokenType type, const std::string& rawCode, std::size_t position, std::size_t lineNumber, std::size_t column) :
-        type(type),
-        rawCode(rawCode),
-        position(position),
-        lineNumber(lineNumber),
-        column(column)
+    Lexeme::Lexeme(const Token& token, const std::string& content, LexemePosition position) :
+        token(token),
+        content(content),
+        position(position)
     {
     }
-
-    TokenType Lexeme::getType() const {
-        return this->type;
+    
+    const Token& Lexeme::getToken() const {
+        return this->token;
     }
 
-    const std::string& Lexeme::getRawCode() const {
-        return this->rawCode;
+    const std::string& Lexeme::getContent() const {
+        return this->content;
     }
 
-    std::size_t Lexeme::getPosition() const {
+    const LexemePosition& Lexeme::getPosition() const {
         return this->position;
     }
 
-    std::size_t Lexeme::getLineNumber() const {
-        return this->lineNumber;
-    }
+    void Lexeme::updateGlobalLexerPosition(LexemePosition& position) const {
+        if (this->getToken().getType() == Token::Type::NEWLINE) {
+            position.columnNumber = 1;
+            position.lineNumber++;
+        }
 
-    std::size_t Lexeme::getColumn() const {
-        return this->column;
+        auto contentSize = this->getContent().size();
+        position.columnNumber += contentSize;
+        position.offset += contentSize;
     }
 }
 

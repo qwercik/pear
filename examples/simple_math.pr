@@ -1,5 +1,5 @@
 module(
-    def(main, (
+    def(main, block(
         unify(g, 1410),
         unify(w, 997),
         unify(gwc_equation, div(g, w)),

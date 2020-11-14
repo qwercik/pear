@@ -1,14 +1,7 @@
 #include <iostream>
-#include <algorithm>
 #include <fstream>
 #include <pear/lexer/Lexer.hpp>
 #include <pear/lexer/Lexeme.hpp>
-#include <pear/lexer/TokenType.hpp>
-#include <pear/ast/Tree.hpp>
-#include <pear/ast/NodePrinter.hpp>
-#include <pear/ast/Node.hpp>
-#include <pear/parser/Parser.hpp>
-#include <pear/pearlog/Interpreter.hpp>
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -29,10 +22,10 @@ int main(int argc, char *argv[]) {
     pear::lexer::Lexer lexer(code);
     auto lexemes = lexer.run();
 
-    pear::parser::Parser parser(lexemes);
-    auto ast = parser.run();
+    for (const auto& lexeme : lexemes) {
+        if (lexeme.getToken().isWhitespace()) continue;
 
-    pear::pearlog::Interpreter interpreter;
-    interpreter.execute(ast);
+        std::cout << "\"" << lexeme.getToken().getDescription() << "\": " << ' ' << lexeme.getContent() << '\n';
+    }
 }
 

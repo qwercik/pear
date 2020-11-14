@@ -2,19 +2,46 @@
 
 #include <string>
 #include <regex>
-#include <optional>
-#include <pear/lexer/Lexeme.hpp>
-#include <pear/lexer/TokenType.hpp>
 
 namespace pear::lexer {
     class Token {
     public:
-        Token(TokenType type, const std::string& pattern);
-        std::optional<Lexeme> match(const std::string& code, std::size_t position, std::size_t lineNumber, std::size_t column) const;
+        enum class Type {
+            // Whitespace characters (newline has the greatest priority)
+            NEWLINE,
+            WHITESPACE,
+
+            // Scalars
+            IDENTIFIER,
+            DECIMAL_INTEGER,
+            FLOAT,
+            STRING,
+
+            // Operators
+            LEFT_PARENTHESIS,
+            RIGHT_PARENTHESIS,
+            COMMA,
+
+            INVALID
+        };
+
+        Token(Type type, const std::string& description, const std::string& pattern);
+
+        bool match(const std::string& code, std::size_t position, std::string& match) const;
+
+        Type getType() const; 
+        bool isWhitespace() const;
+        bool isIdentifier() const;
+        bool isLiteral() const;
+        bool isScalar() const;
+        bool isOperator() const;
+
+        const std::string& getDescription() const;
 
     private:
-        TokenType type;
+        Type type;
         std::regex pattern;
+        std::string description;
     };
 }
 

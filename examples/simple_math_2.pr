@@ -1,5 +1,5 @@
 module(
-    def(main, (
+    def(main, block(
         unify(g, 1410.0),
         unify(w, 997.112),
         eval(pow(112, 3.5), sth),

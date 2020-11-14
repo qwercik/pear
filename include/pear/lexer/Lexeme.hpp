@@ -1,25 +1,26 @@
 #pragma once
 
 #include <string>
-#include <pear/lexer/TokenType.hpp>
+#include <pear/lexer/Token.hpp>
+#include <pear/lexer/LexemePosition.hpp>
 
 namespace pear::lexer {
     class Lexeme {
     public:
-        Lexeme(TokenType type, const std::string& rawCode, std::size_t position, std::size_t lineNumber, std::size_t column);
-        
-        TokenType getType() const;
-        const std::string& getRawCode() const;
-        std::size_t getPosition() const;
+        Lexeme(const Token& token, const std::string& content, LexemePosition position);
+
+        const Token& getToken() const;
+        const std::string& getContent() const;
+        const LexemePosition& getPosition() const;
         std::size_t getLineNumber() const;
         std::size_t getColumn() const;
         
+        void updateGlobalLexerPosition(LexemePosition& position) const;
+
     private:
-        TokenType type;
-        std::string rawCode;
-        std::size_t position;
-        std::size_t lineNumber;
-        std::size_t column;
+        Token token;
+        std::string content;
+        LexemePosition position;
     };
 }
 
