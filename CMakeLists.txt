@@ -14,7 +14,9 @@ add_executable(pear
     src/lexer/Lexeme.cpp
 
     include/pear/ast/AbstractSyntaxTree.hpp
+    include/pear/ast/PrintableTree.hpp
     include/pear/ast/Node.hpp
+    src/ast/PrintableTree.cpp
     src/ast/AbstractSyntaxTree.cpp
     src/ast/Node.cpp
 
