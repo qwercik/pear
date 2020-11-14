@@ -23,6 +23,10 @@ add_executable(pear
     include/pear/parser/Parser.hpp
     include/pear/parser/ParserException.hpp
     src/parser/Parser.cpp
+
+    include/pear/Executor.hpp
+    include/pear/pearlog/Interpreter.hpp
+    src/pearlog/Interpreter.cpp
 )
 target_include_directories(pear PUBLIC include/)
 

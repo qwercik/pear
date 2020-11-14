@@ -8,6 +8,7 @@
 #include <pear/ast/NodePrinter.hpp>
 #include <pear/ast/Node.hpp>
 #include <pear/parser/Parser.hpp>
+#include <pear/pearlog/Interpreter.hpp>
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -31,6 +32,7 @@ int main(int argc, char *argv[]) {
     pear::parser::Parser parser(lexemes);
     auto ast = parser.run();
 
-    std::cout << pear::ast::NodePrinter(ast) << '\n';
+    pear::pearlog::Interpreter interpreter;
+    interpreter.execute(ast);
 }
 
