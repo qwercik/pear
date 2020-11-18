@@ -27,7 +27,7 @@ namespace pear::ast {
         return child;
     }
 
-    const std::list<std::unique_ptr<Node>>& Node::getChildren() const {
+    const std::list<Node::Pointer>& Node::getChildren() const {
         return this->children;
     }
 

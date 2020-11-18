@@ -4,7 +4,7 @@
 
 namespace pear::ast {
     NodePrinter::NodePrinter(const Node& node) :
-        node(node);
+        node(node)
     {
     }
 

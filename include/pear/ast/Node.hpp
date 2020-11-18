@@ -7,6 +7,8 @@
 namespace pear::ast {
     class Node {
     public:
+        using Pointer = std::shared_ptr<Node>;
+
         Node() = default;
         Node(const lexer::Lexeme& lexeme);
 
@@ -16,7 +18,7 @@ namespace pear::ast {
         Node *getParent() const;
 
         Node *addNextChild(Node *child);
-        const std::list<std::unique_ptr<Node>>& getChildren() const;
+        const std::list<Pointer>& getChildren() const;
 
         bool isVariable() const;
         bool isLiteral() const;
@@ -25,6 +27,6 @@ namespace pear::ast {
     private:
         lexer::Lexeme lexeme;
         Node *parent = nullptr;
-        std::list<std::unique_ptr<Node>> children;
+        std::list<Pointer> children;
     };
 }

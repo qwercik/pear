@@ -15,9 +15,9 @@ add_executable(pear
     src/lexer/LexemePosition.cpp
 
     include/pear/ast/Node.hpp
-    #include/pear/ast/NodePrinter.hpp
+    include/pear/ast/NodePrinter.hpp
     src/ast/Node.cpp
-    #src/ast/NodePrinter.cpp
+    src/ast/NodePrinter.cpp
 
     include/pear/parser/Parser.hpp
     include/pear/parser/ParserException.hpp

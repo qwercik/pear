@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <pear/lexer/Lexer.hpp>
-//#include <pear/ast/NodePrinter.hpp>
+#include <pear/ast/NodePrinter.hpp>
 #include <pear/parser/Parser.hpp>
 
 int main(int argc, char *argv[]) {
@@ -26,6 +26,6 @@ int main(int argc, char *argv[]) {
     pear::parser::Parser parser(lexemes);
     auto ast = parser.run();
 
-    //std::cout << pear::ast::NodePrinter(*ast) << '\n';
+    std::cout << pear::ast::NodePrinter(*ast) << '\n';
 }
 
