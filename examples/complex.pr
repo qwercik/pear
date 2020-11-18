@@ -1,0 +1,35 @@
+module(
+    author('Eryk Andrzejewski'),
+    version('0.0.1'),
+    description('Complex number implementation'),
+
+    def(eval(complex(a, b), complex(a, b))),
+
+    def(eval(add(complex(real_1, imaginary_1), complex(real_2, imaginary_2)), complex(real, imaginary)), block(
+        eval(add(real_1, real_2), real),
+        eval(add(imaginary_1, imaginary_2), imaginary)
+        break()
+    )),
+    def(eval(add(expression_1, expression_2), result), block(
+        eval(expression_1, result_1),
+        eval(expression_2, result_2),
+        eval(add(result_1, result_2), result)
+    )),
+
+    def(eval(sub(complex(real_1, imaginary_1), complex(real_2, imaginary_2)), complex(real, imaginary)), block(
+        eval(sub(real_1, real_2), real),
+        eval(sub(imaginary_1, imaginary_2), imaginary)
+        break()
+    )),
+    def(eval(sub(expression_1, expression_2), result), block(
+        eval(expression_1, result_1),
+        eval(expression_2, result_2),
+        eval(sub(result_1, result_2), result)
+    )),
+
+    def(str(complex(a, b), result), block(
+        str(a, astr),
+        str(b, bstr),
+        str_concat(astr, ' + ', bstr, 'i', result)
+    )
+)

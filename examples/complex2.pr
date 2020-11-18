@@ -1,0 +1,39 @@
+module(
+    author('Eryk Andrzejewski'),
+    version('0.0.1'),
+    description('Complex number implementation'),
+
+    def(eval(expression, result), or(
+        and(
+            unify(expression, complex(a, b)),
+            unify(result, expression(complex(a, b)),
+            break()
+        ),
+
+        and(
+            unify(expression, add(complex(r1, i1), complex(r2, i2))),
+            eval(add(r1, r2), r),
+            eval(add(i1, i2), i),
+            unify(result, complex(r, i))
+        ),
+        and(
+            flatten(add(1, 2, 3, 4, 5), add(add(add(add(1, 2), 3), 4), 5)),
+
+            function(expression, add, expressions_list),
+            map(expressions_list, eval, results_list),
+            reduce(results_list, lambda(x, y, z, eval(add(x, y), z)), complex(0, 0), result)
+        ),
+
+        and(
+            unify(expression, sub(complex(r1, i1), complex(r2, i2))),
+            eval(sub(r1, r2), r),
+            eval(sub(i1, i2), i),
+            unify(result, complex(r, i))
+        ),
+        and(
+            function(expression, sub, expressions_list),
+            map(expressions_list, eval, results_list),
+            reduce(results_list, lambda(x, y, z, eval(sub(x, y), z)), complex(0, 0), result)
+        )
+    )),
+)

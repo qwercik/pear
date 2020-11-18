@@ -1,0 +1,33 @@
+module(
+  author('Eryk Andrzejewski'),
+  email('erykandrzejewski@gmail.com'),
+  description('Implementation of sort algorithm'),
+
+  def(quicksort_partition(key, list, left, right), or(
+    unify(list, list()),
+
+    and(
+      append(list(head), tail, list),
+      quicksort_partition(key, tail, previous_left, previous_right),
+      or(
+        and(le(head, key), append([head], previous_left, left))
+        and(lt(key, head), append([head], previous_right, right))
+      )
+    )
+  )),
+
+  def(quicksort(input_list, output_list), or(
+    unify(input_list, list()),
+
+    and(
+      append(list(pivot), tail, input_list),
+      quicksort_partition(pivot, tail, left, right),
+      quicksort(left, left_sorted),
+      quicksort(right, right_sorted),
+      append(left, list(pivot), right, output_list)
+    )
+  )),
+
+  def(sort(input, output), quicksort(input, output))
+)
+
