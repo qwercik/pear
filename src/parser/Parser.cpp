@@ -17,7 +17,7 @@ namespace pear::parser {
     {
     }
 
-    ast::Node::Pointer Parser::run() {
+    ast::Node Parser::run() {
         if (!lexemes.front().getToken().isIdentifier()) {
             throw ParserException("First token should always be an identifier");
         }
@@ -30,7 +30,7 @@ namespace pear::parser {
             }
         }
 
-        return this->root->getChildren().front();
+        return *this->root->getChildren().front();
     }
 
     void Parser::handleLexeme(const lexer::Lexeme& currentLexeme) {
