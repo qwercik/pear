@@ -1,45 +1,45 @@
 #include <list>
 #include <memory>
 #include <pear/lexer/Lexeme.hpp>
-#include <pear/ast/Node.hpp>
+#include <pear/ast/Term.hpp>
 
 namespace pear::ast {
-    Node::Node(const lexer::Lexeme& lexeme) :
+    Term::Term(const lexer::Lexeme& lexeme) :
         lexeme(lexeme)
     {
     }
 
-    const lexer::Lexeme& Node::getLexeme() const {
+    const lexer::Lexeme& Term::getLexeme() const {
         return this->lexeme;
     }
 
-    bool Node::hasParent() const {
+    bool Term::hasParent() const {
         return this->parent;
     }
     
-    Node *Node::getParent() const {
+    Term *Term::getParent() const {
         return this->parent;
     }
 
-    Node *Node::addNextChild(Node *child) {
+    Term *Term::addNextChild(Term *child) {
         child->parent = this;
         this->children.emplace_back(child);
         return child;
     }
 
-    const std::list<Node::Pointer>& Node::getChildren() const {
+    const std::list<Term::Pointer>& Term::getChildren() const {
         return this->children;
     }
 
-    bool Node::isVariable() const {
+    bool Term::isVariable() const {
         return this->lexeme.getToken().isIdentifier() && this->children.empty();
     }
 
-    bool Node::isLiteral() const {
+    bool Term::isLiteral() const {
         return this->lexeme.getToken().isLiteral();
     }
 
-    bool Node::isFunction() const {
+    bool Term::isFunction() const {
         return this->lexeme.getToken().isIdentifier() && !this->children.empty();
     }
 }

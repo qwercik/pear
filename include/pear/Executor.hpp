@@ -1,11 +1,11 @@
 #pragma once
 
-#include <pear/ast/Node.hpp>
+#include <pear/ast/Term.hpp>
 
 namespace pear {
     class Executor {
     public:
-        virtual void execute(ast::Node& tree) = 0;
+        virtual void execute(ast::Term& tree) = 0;
     };
 }
 

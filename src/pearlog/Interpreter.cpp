@@ -1,11 +1,11 @@
 #include <iostream>
 #include <pear/pearlog/Interpreter.hpp>
 #include <pear/pearlog/InterpreterException.hpp>
-#include <pear/ast/Node.hpp>
-#include <pear/ast/NodePrinter.hpp>
+#include <pear/ast/Term.hpp>
+#include <pear/ast/TermPrinter.hpp>
 
 namespace pear::pearlog {
-    void Interpreter::execute(ast::Node& node) {
+    void Interpreter::execute(ast::Term& node) {
         if (!node.isFunction() || node.getLexeme().getContent() != "module") {
             throw InterpreterException(
                 "Each program file should be nested in global module() function"
@@ -15,7 +15,7 @@ namespace pear::pearlog {
         for (const auto& child : node.getChildren()) {
             if (child->isFunction() && child->getLexeme().getContent() == "def") {
                 auto& header = *child->getChildren().front();
-                std::cout << "Definicja predykatu " << pear::ast::NodePrinter(header) << '\n';
+                std::cout << "Definicja predykatu " << pear::ast::TermPrinter(header) << '\n';
             }
         }
     }

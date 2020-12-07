@@ -14,10 +14,15 @@ add_executable(pear
     src/lexer/Lexeme.cpp
     src/lexer/LexemePosition.cpp
 
-    include/pear/ast/Node.hpp
-    include/pear/ast/NodePrinter.hpp
-    src/ast/Node.cpp
-    src/ast/NodePrinter.cpp
+    include/pear/ast/Term.hpp
+    include/pear/ast/Function.hpp
+    include/pear/ast/Variable.hpp
+    include/pear/ast/Literal.hpp
+    include/pear/ast/TermPrinter.hpp
+    src/ast/Term.cpp
+    src/ast/Function.cpp
+    src/ast/Variable.cpp
+    src/ast/TermPrinter.cpp
 
     include/pear/parser/Parser.hpp
     include/pear/parser/ParserException.hpp

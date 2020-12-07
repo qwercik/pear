@@ -5,19 +5,19 @@
 #include <pear/lexer/Lexeme.hpp>
 
 namespace pear::ast {
-    class Node {
+    class Term {
     public:
-        using Pointer = std::shared_ptr<Node>;
+        using Pointer = std::shared_ptr<Term>;
 
-        Node() = default;
-        Node(const lexer::Lexeme& lexeme);
+        Term() = default;
+        Term(const lexer::Lexeme& lexeme);
 
         const lexer::Lexeme& getLexeme() const;
 
         bool hasParent() const;
-        Node *getParent() const;
+        Term *getParent() const;
 
-        Node *addNextChild(Node *child);
+        Term *addNextChild(Term *child);
         const std::list<Pointer>& getChildren() const;
 
         bool isVariable() const;
@@ -26,7 +26,7 @@ namespace pear::ast {
 
     private:
         lexer::Lexeme lexeme;
-        Node *parent = nullptr;
+        Term *parent = nullptr;
         std::list<Pointer> children;
     };
 }

@@ -1,14 +1,14 @@
 #include <pear/lexer/Lexeme.hpp>
-#include <pear/ast/Node.hpp>
-#include <pear/ast/NodePrinter.hpp>
+#include <pear/ast/Term.hpp>
+#include <pear/ast/TermPrinter.hpp>
 
 namespace pear::ast {
-    NodePrinter::NodePrinter(const Node& node) :
+    TermPrinter::TermPrinter(const Term& node) :
         node(node)
     {
     }
 
-    void NodePrinter::print(std::ostream& stream, const Node *node) {
+    void TermPrinter::print(std::ostream& stream, const Term *node) {
         if (node->isVariable()) {
             stream << node->getLexeme().getContent();
         } else if (node->isLiteral()) {
@@ -19,12 +19,12 @@ namespace pear::ast {
             auto children = node->getChildren();
             if (!children.empty()) {
                 auto it = children.begin();
-                NodePrinter::print(stream, it->get());
+                TermPrinter::print(stream, it->get());
                 it++;
 
                 for (; it != children.end(); it++) {
                     stream << ", ";
-                    NodePrinter::print(stream, it->get());
+                    TermPrinter::print(stream, it->get());
                 }
             }
 
@@ -32,8 +32,8 @@ namespace pear::ast {
         }
     }
 
-    std::ostream& operator<<(std::ostream& stream, const NodePrinter& printer) {
-        NodePrinter::print(stream, &printer.node);
+    std::ostream& operator<<(std::ostream& stream, const TermPrinter& printer) {
+        TermPrinter::print(stream, &printer.node);
         return stream;
     }
 }

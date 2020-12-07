@@ -5,19 +5,22 @@
 #include <pear/lexer/Lexeme.hpp>
 #include <pear/parser/Parser.hpp>
 #include <pear/parser/ParserException.hpp>
-#include <pear/ast/Node.hpp>
+#include <pear/ast/Term.hpp>
+#include <pear/ast/Function.hpp>
+#include <pear/ast/Variable.hpp>
+#include <pear/ast/Term.hpp>
 #include <iostream>
 
 namespace pear::parser {
     Parser::Parser(const std::list<lexer::Lexeme>& lexemes) :
         lexemes(lexemes),
-        root(std::make_shared<ast::Node>()),
+        root(std::make_shared<ast::Term>()),
         current(root.get()),
         previousLexeme(nullptr)
     {
     }
 
-    ast::Node Parser::run() {
+    ast::Term Parser::run() {
         if (!lexemes.front().getToken().isIdentifier()) {
             throw ParserException("First token should always be an identifier");
         }
@@ -44,14 +47,14 @@ namespace pear::parser {
                 throw ParserException("wystąpił błąd");
             }
 
-            current = current->addNextChild(new ast::Node(*previousLexeme));
+            current = current->addNextChild(new ast::Term(*previousLexeme));
         } else if (currentToken.getType() == lexer::Token::Type::RIGHT_PARENTHESIS) {
             if (!current->hasParent()) {
                 throw ParserException("hasParent");
             } else if (previousToken.getType() == lexer::Token::Type::COMMA) {
                 throw ParserException("comma before right parenthesis");
             } else if (previousToken.isScalar()) {
-                current->addNextChild(new ast::Node(*previousLexeme));
+                current->addNextChild(new ast::Term(*previousLexeme));
             }
  
             current = current->getParent();
@@ -61,7 +64,7 @@ namespace pear::parser {
             } else if (previousToken.getType() == lexer::Token::Type::LEFT_PARENTHESIS) {
                 throw ParserException("left parenthesis befor comma");
             } else if (previousToken.isScalar()) {
-                current->addNextChild(new ast::Node(*previousLexeme));
+                current->addNextChild(new ast::Term(*previousLexeme));
             }
         }
     }

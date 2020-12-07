@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <pear/lexer/Lexer.hpp>
-#include <pear/ast/NodePrinter.hpp>
+#include <pear/ast/TermPrinter.hpp>
 #include <pear/parser/Parser.hpp>
 #include <pear/pearlog/Interpreter.hpp>
 
