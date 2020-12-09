@@ -3,40 +3,27 @@
 #include <string>
 #include <pear/lexer/Lexeme.hpp>
 #include <pear/ast/Term.hpp>
+#include <pear/ast/TermVisitor.hpp>
 
 namespace pear::ast {
-    template <typename T>
     class Literal : public Term {
     public:
-        Literal(lexer::Lexeme& lexeme) :
-            Term(lexeme),
+        Literal(const lexer::Lexeme& lexeme) :
+            Term(lexeme)
         {
-            this->value = this->parse(this->getLexeme().getContent());
         }
 
-        T getValue() const {
-            return value;
+        std::string getContent() const {
+            return this->getLexeme().getContent();
         }
 
-    private:
-        T parse(const std::string& string);
+        virtual void accept(TermVisitor *visitor) override {
+            visitor->visitLiteral(this);
+        }
 
-        T value;
+        bool operator==(const Literal& literal) const {
+            return this->getContent() == literal.getContent();
+        }
     };
-
-    template <>
-    std::string Literal<std::string>::parse(const std::string& string) {
-        return string;
-    }
-
-    template <>
-    int Literal<int>::parse(const std::string& string) {
-        return std::stoi(string);
-    }
-
-    template <>
-    double Literal<double>::parse(const std::string& string) {
-        return std::stod(string);
-    }
 }
 

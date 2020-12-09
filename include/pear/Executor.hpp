@@ -5,7 +5,7 @@
 namespace pear {
     class Executor {
     public:
-        virtual void execute(ast::Term& tree) = 0;
+        virtual void execute(ast::Term::Pointer tree) = 0;
     };
 }
 

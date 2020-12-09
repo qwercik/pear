@@ -3,7 +3,7 @@
 #include <pear/ast/TermPrinter.hpp>
 
 namespace pear::ast {
-    TermPrinter::TermPrinter(const Term& node) :
+    TermPrinter::TermPrinter(const Term *node) :
         node(node)
     {
     }
@@ -33,7 +33,7 @@ namespace pear::ast {
     }
 
     std::ostream& operator<<(std::ostream& stream, const TermPrinter& printer) {
-        TermPrinter::print(stream, &printer.node);
+        TermPrinter::print(stream, printer.node);
         return stream;
     }
 }

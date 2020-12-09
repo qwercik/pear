@@ -8,7 +8,7 @@ namespace pear::parser {
     class Parser {
     public:
         Parser(const std::list<lexer::Lexeme>& lexemes);
-        ast::Term run();
+        ast::Term::Pointer run();
 
     private:
         void handleLexeme(const lexer::Lexeme& lexeme);

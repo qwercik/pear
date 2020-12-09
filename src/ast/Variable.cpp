@@ -11,5 +11,13 @@ namespace pear::ast {
     std::string Variable::getName() const {
         return this->getLexeme().getContent();
     }
+
+    void Variable::accept(TermVisitor *visitor) {
+        visitor->visitVariable(this);
+    }
+    
+    bool Variable::operator==(const Variable& variable) const {
+        return this->getName() == variable.getName();
+    }
 }
 

@@ -29,7 +29,11 @@ add_executable(pear
     src/parser/Parser.cpp
 
     include/pear/pearlog/Interpreter.hpp
+    include/pear/pearlog/Substitution.hpp
+    include/pear/pearlog/Unification.hpp
     src/pearlog/Interpreter.cpp
+    src/pearlog/Substitution.cpp
+    src/pearlog/Unification.cpp
 )
 target_include_directories(pear PUBLIC include/)
 

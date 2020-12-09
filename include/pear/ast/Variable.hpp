@@ -2,6 +2,7 @@
 
 #include <pear/lexer/Lexeme.hpp>
 #include <pear/ast/Term.hpp>
+#include <pear/ast/TermVisitor.hpp>
 
 namespace pear::ast {
     class Variable : public Term {
@@ -9,5 +10,9 @@ namespace pear::ast {
         Variable(const lexer::Lexeme& lexeme);
 
         std::string getName() const;
+        
+        virtual void accept(TermVisitor *visitor) override;
+
+        bool operator==(const Variable& variable) const;
     };
 }
