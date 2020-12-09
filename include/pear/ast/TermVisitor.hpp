@@ -10,9 +10,9 @@ namespace pear::ast {
 
     class TermVisitor {
     public:
-        virtual void visitLiteral(Literal *literal) = 0;
-        virtual void visitVariable(Variable *variable) = 0;
-        virtual void visitFunction(Function *function) = 0;
+        virtual void visit(Literal *literal) = 0;
+        virtual void visit(Variable *variable) = 0;
+        virtual void visit(Function *function) = 0;
     };
 }
 

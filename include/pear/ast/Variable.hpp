@@ -14,5 +14,6 @@ namespace pear::ast {
         virtual void accept(TermVisitor *visitor) override;
 
         bool operator==(const Variable& variable) const;
+        bool operator!=(const Variable& variable) const;
     };
 }

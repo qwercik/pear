@@ -6,15 +6,18 @@
 namespace pear::pearlog {
     class Substitution : public ast::TermVisitor {
     public:
-        Substitution(const ast::Variable *variable, const ast::Term *other);
+        Substitution(const ast::Variable *destination, const ast::Term *source);
         void apply(ast::Term *term);
  
-        virtual void visitLiteral(ast::Literal* literal) override;
-        virtual void visitVariable(ast::Variable* variable) override;
-        virtual void visitFunction(ast::Function* function) override;
+        virtual void visit(ast::Literal* literal) override;
+        virtual void visit(ast::Variable* variable) override;
+        virtual void visit(ast::Function* function) override;
+
+        const ast::Variable *getDestination() const;
+        const ast::Term *getSource() const;
 
     private:
-        const ast::Variable *variable;
-        const ast::Term *other;
+        const ast::Variable *destination;
+        const ast::Term *source;
     };
 }

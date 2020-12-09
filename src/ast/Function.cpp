@@ -21,10 +21,14 @@ namespace pear::ast {
     }
     
     void Function::accept(TermVisitor *visitor) {
-        visitor->visitFunction(this);
+        visitor->visit(this);
     }
     
     bool Function::operator==(const Function& other) const {
         return this->getArity() == other.getArity() && this->getName() == other.getName();
+    }
+    
+    bool Function::operator!=(const Function& other) const {
+        return !(*this == other);
     }
 }

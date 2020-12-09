@@ -5,9 +5,9 @@
 #include <pear/ast/Literal.hpp>
 
 namespace pear::pearlog {
-    Substitution::Substitution(const ast::Variable *variable, const ast::Term *other) :
-        variable(variable),
-        other(other)
+    Substitution::Substitution(const ast::Variable *destination, const ast::Term *source) :
+        destination(destination),
+        source(source)
     {
     }
 
@@ -15,19 +15,27 @@ namespace pear::pearlog {
         term->accept(this);
     }
 
-    void Substitution::visitVariable(ast::Variable* variable) {
-        if (*this->variable == *variable) {
-            variable->replace(new ast::Variable(*this->variable));
+    void Substitution::visit(ast::Variable* variable) {
+        if (*this->destination != *variable) {
+            variable->replace(new ast::Variable(*this->destination));
         }
     }
     
-    void Substitution::visitLiteral(ast::Literal* literal) {
+    void Substitution::visit(ast::Literal* literal) {
     }
 
-    void Substitution::visitFunction(ast::Function* function) {
+    void Substitution::visit(ast::Function* function) {
         for (auto& child : function->getArguments()) {
             this->apply(child.get());
         }
+    }
+
+    const ast::Variable *Substitution::getDestination() const {
+        return this->destination;
+    }
+
+    const ast::Term *Substitution::getSource() const {
+        return this->source;
     }
 }
 

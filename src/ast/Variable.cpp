@@ -13,11 +13,15 @@ namespace pear::ast {
     }
 
     void Variable::accept(TermVisitor *visitor) {
-        visitor->visitVariable(this);
+        visitor->visit(this);
     }
     
     bool Variable::operator==(const Variable& variable) const {
         return this->getName() == variable.getName();
+    }
+
+    bool Variable::operator!=(const Variable& variable) const {
+        return !(*this == variable);
     }
 }
 

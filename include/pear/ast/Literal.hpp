@@ -18,11 +18,15 @@ namespace pear::ast {
         }
 
         virtual void accept(TermVisitor *visitor) override {
-            visitor->visitLiteral(this);
+            visitor->visit(this);
         }
 
         bool operator==(const Literal& literal) const {
             return this->getContent() == literal.getContent();
+        }
+        
+        bool operator!=(const Literal& literal) const {
+            return !(*this == literal);
         }
     };
 }
