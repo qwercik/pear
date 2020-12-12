@@ -22,6 +22,7 @@ add_executable(pear
     src/ast/Term.cpp
     src/ast/Function.cpp
     src/ast/Variable.cpp
+    src/ast/Literal.cpp
     src/ast/TermPrinter.cpp
 
     include/pear/parser/Parser.hpp

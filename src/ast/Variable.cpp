@@ -16,6 +16,10 @@ namespace pear::ast {
         visitor->visit(this);
     }
     
+    Term::Pointer Variable::clone() const {
+        return std::make_shared<Variable>(*this);
+    }
+    
     bool Variable::operator==(const Variable& variable) const {
         return this->getName() == variable.getName();
     }

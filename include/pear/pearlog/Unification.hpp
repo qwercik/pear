@@ -12,10 +12,20 @@ namespace pear::pearlog {
     class Unification {
     public:
         struct Result {
+            Result(ast::Term *term) :
+                term(term)
+            {
+            }
+
             std::list<Substitution> substitutions;
+            ast::Term *term;
             bool error = false;
         };
 
+        Unification(ast::Term *first, ast::Term *second);
+        Result getResult() const;
+
+    private:
         class UnificationVisitor : public ast::TermVisitor {
         public:
             UnificationVisitor(ast::Term *term, Result *result);
@@ -69,10 +79,6 @@ namespace pear::pearlog {
         };
 
 
-        Unification(ast::Term *first, ast::Term *second);
-        Result getResult() const;
-
-    private:
         ast::Term *first;
         ast::Term *second;
 

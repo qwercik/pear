@@ -30,6 +30,7 @@ namespace pear::ast {
         void replace(Term *term);
 
         virtual void accept(TermVisitor *visitor) = 0;
+        virtual Pointer clone() const = 0;
 
     private:
         void insertChild(const Iterator& iterator, Term* child);

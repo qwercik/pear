@@ -45,7 +45,7 @@ namespace pear::ast {
         auto iterator = this->parentListIterator;
 
         this->parent->insertChild(iterator, term);
-        this->parent->children.erase(this->parentListIterator);
+        this->parent->children.erase(iterator);
     }
 
     void Term::insertChild(const Term::Iterator& iterator, Term* child) {

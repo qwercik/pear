@@ -12,6 +12,7 @@ namespace pear::ast {
         std::string getName() const;
         
         virtual void accept(TermVisitor *visitor) override;
+        virtual Pointer clone() const override;
 
         bool operator==(const Variable& variable) const;
         bool operator!=(const Variable& variable) const;

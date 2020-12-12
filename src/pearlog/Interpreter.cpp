@@ -27,12 +27,13 @@ namespace pear::pearlog {
         auto first = (*firstIt).get();
         auto second = (*secondIt).get();
 
-        std::cout << "Unifikuję termy: " << ast::TermPrinter(first) << " " << ast::TermPrinter(second) << "\n\n";
+        std::cout << "Unifikuję termy: " << ast::TermPrinter(first) << " oraz " << ast::TermPrinter(second) << "\n\n";
 
 
         Unification unif(first, second);
+
         auto res = unif.getResult();
-       
+      
         if (res.error) {
             std::cout << "Nie udało się wykonać unifikacji\n";
         } else {

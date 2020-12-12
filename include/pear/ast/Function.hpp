@@ -14,6 +14,7 @@ namespace pear::ast {
         std::size_t getArity() const;
         
         virtual void accept(TermVisitor *visitor) override;
+        virtual Pointer clone() const override;
 
         bool operator==(const Function& other) const;
         bool operator!=(const Function& other) const;

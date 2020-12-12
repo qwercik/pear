@@ -8,26 +8,15 @@
 namespace pear::ast {
     class Literal : public Term {
     public:
-        Literal(const lexer::Lexeme& lexeme) :
-            Term(lexeme)
-        {
-        }
+        Literal(const lexer::Lexeme& lexeme);
 
-        std::string getContent() const {
-            return this->getLexeme().getContent();
-        }
+        std::string getContent() const;
 
-        virtual void accept(TermVisitor *visitor) override {
-            visitor->visit(this);
-        }
+        virtual void accept(TermVisitor *visitor) override;
+        virtual Pointer clone() const override;
 
-        bool operator==(const Literal& literal) const {
-            return this->getContent() == literal.getContent();
-        }
-        
-        bool operator!=(const Literal& literal) const {
-            return !(*this == literal);
-        }
+        bool operator==(const Literal& literal) const;
+        bool operator!=(const Literal& literal) const;
     };
 }
 

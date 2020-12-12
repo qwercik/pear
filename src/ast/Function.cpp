@@ -24,6 +24,10 @@ namespace pear::ast {
         visitor->visit(this);
     }
     
+    Term::Pointer Function::clone() const {
+        return std::make_shared<Function>(*this);
+    }
+    
     bool Function::operator==(const Function& other) const {
         return this->getArity() == other.getArity() && this->getName() == other.getName();
     }

@@ -1,6 +1,5 @@
 #include <pear/pearlog/Unification.hpp>
 #include <pear/pearlog/Substitution.hpp>
-#include <iostream>
 
 namespace pear::pearlog {
     Unification::UnificationVisitor::UnificationVisitor(ast::Term *term, Unification::Result *result) :
@@ -10,19 +9,16 @@ namespace pear::pearlog {
     }
 
     void Unification::UnificationVisitor::visit(ast::Variable *variable) {
-        std::cerr << "A\n";
         VariableVisitor visitor(variable, this->result);
         this->term->accept(&visitor);
     }
 
     void Unification::UnificationVisitor::visit(ast::Literal *literal) {
-        std::cerr << "B\n";
         LiteralVisitor visitor(literal, this->result);
         this->term->accept(&visitor);
     }
 
     void Unification::UnificationVisitor::visit(ast::Function *function) {
-        std::cerr << "C\n";
         FunctionVisitor visitor(function, this->result);
         this->term->accept(&visitor);
     }
@@ -36,20 +32,23 @@ namespace pear::pearlog {
     }
 
     void Unification::VariableVisitor::visit(ast::Variable *variable) {
-        std::cerr << "D\n";
         if (this->variable != variable) {
-            this->result->substitutions.push_back(Substitution(this->variable, variable));
+            auto newSubstitution = Substitution(this->variable, variable);
+            newSubstitution.apply(this->result->substitutions);
+            newSubstitution.apply(this->result->term);
         }
     }
 
     void Unification::VariableVisitor::visit(ast::Literal *literal) {
-        std::cerr << "E\n";
-        this->result->substitutions.push_back(Substitution(this->variable, literal));
+        auto newSubstitution = Substitution(this->variable, literal);
+        newSubstitution.apply(this->result->substitutions);
+        newSubstitution.apply(this->result->term);
     }
 
     void Unification::VariableVisitor::visit(ast::Function *function) {
-        std::cerr << "F\n";
-        this->result->substitutions.push_back(Substitution(this->variable, function));
+        auto newSubstitution = Substitution(this->variable, function);
+        newSubstitution.apply(this->result->substitutions);
+        newSubstitution.apply(this->result->term);
     }  
 
 
@@ -61,19 +60,18 @@ namespace pear::pearlog {
     }
 
     void Unification::LiteralVisitor::visit(ast::Variable *variable) {
-        std::cerr << "G\n";
-        this->result->substitutions.push_back(Substitution(variable, this->literal));
+        auto newSubstitution = Substitution(variable, this->literal);
+        newSubstitution.apply(this->result->substitutions);
+        newSubstitution.apply(this->result->term);
     }
 
     void Unification::LiteralVisitor::visit(ast::Literal *literal) {
-        std::cerr << "H\n";
         if (this->literal != literal) {
             this->result->error = true;
         }
     }
 
     void Unification::LiteralVisitor::visit(ast::Function *function) {
-        std::cerr << "I\n";
         this->result->error = false;
     }
 
@@ -86,17 +84,16 @@ namespace pear::pearlog {
     }
 
     void Unification::FunctionVisitor::visit(ast::Variable *variable) {
-        std::cerr << "J\n";
-        this->result->substitutions.push_back(Substitution(variable, this->function));
+        auto newSubstitution = Substitution(variable, this->function);
+        newSubstitution.apply(this->result->substitutions);
+        newSubstitution.apply(this->result->term);
     }
 
     void Unification::FunctionVisitor::visit(ast::Literal *literal) {
-        std::cerr << "K\n";
         this->result->error = true;
     }
 
     void Unification::FunctionVisitor::visit(ast::Function *function) {
-        std::cerr << "L\n";
         // Comparing signatures (name and arity)
         if (*this->function != *function) {
             this->result->error = true;
@@ -128,7 +125,8 @@ namespace pear::pearlog {
 
     Unification::Unification(ast::Term *first, ast::Term *second) :
         first(first),
-        second(second)
+        second(second),
+        result(first)
     {
         UnificationVisitor visitor(second, &this->result);
         first->accept(&visitor);
