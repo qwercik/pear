@@ -23,12 +23,11 @@ int main(int argc, char *argv[]) {
 
     pear::lexer::Lexer lexer;
     auto lexemes = lexer.run(code);
-    for (const auto& lexeme : lexemes) {
-        std::cout << lexeme.getToken()->getDescription() << ": " << lexeme.getContent() << '\n';
-    }
 
     //pear::parser::Parser parser(lexemes);
     //auto ast = parser.run();
+
+    //std::cout << pear::ast::TermPrinter(ast.get()) << '\n';
 
     //pear::pearlog::Interpreter interpreter;
     //interpreter.execute(ast);

@@ -20,7 +20,7 @@ namespace pear::parser {
     }
 
     ast::Term::Pointer Parser::run() {
-        if (!lexemes.front().getToken().isIdentifier()) {
+        if (!lexemes.front().getToken()->isIdentifier()) {
             throw ParserException("First token should always be an identifier");
         }
         previousLexeme = &lexemes.front();
@@ -28,7 +28,7 @@ namespace pear::parser {
         current = root.get();
 
         for (auto it = std::next(this->lexemes.begin()); it != this->lexemes.end(); it++) {
-            if (!it->getToken().isWhitespace()) {
+            if (!it->getToken()->isWhitespace()) {
                 handleLexeme(*it);
                 previousLexeme = &*it;
             }
@@ -41,35 +41,35 @@ namespace pear::parser {
         auto currentToken = currentLexeme.getToken();
         auto previousToken = this->previousLexeme->getToken();
     
-        if (currentToken.isScalar() && previousToken.isScalar()) {
+        if (currentToken->isScalar() && previousToken->isScalar()) {
             throw ParserException("scalar near by scalar");
-        } else if (currentToken.getType() == lexer::Token::Type::LEFT_PARENTHESIS) {
-            if (!previousToken.isIdentifier()) {
+        } else if (currentToken->getType() == lexer::Token::Type::LEFT_PARENTHESIS) {
+            if (!previousToken->isIdentifier()) {
                 throw ParserException("wystąpił błąd");
             }
 
-            current = current->addNextChild(new ast::Function(*previousLexeme));
-        } else if (currentToken.getType() == lexer::Token::Type::RIGHT_PARENTHESIS) {
+            current = current->addNextChild(std::make_shared<ast::Function>(*previousLexeme));
+        } else if (currentToken->getType() == lexer::Token::Type::RIGHT_PARENTHESIS) {
             if (!current->hasParent()) {
                 throw ParserException("hasParent");
-            } else if (previousToken.getType() == lexer::Token::Type::COMMA) {
+            } else if (previousToken->getType() == lexer::Token::Type::COMMA) {
                 throw ParserException("comma before right parenthesis");
-            } else if (previousToken.isLiteral()) {
-                current->addNextChild(new ast::Literal(*previousLexeme));
-            } else if (previousToken.isIdentifier()) {
-                current->addNextChild(new ast::Variable(*previousLexeme));
+            } else if (previousToken->isLiteral()) {
+                current->addNextChild(std::make_shared<ast::Literal>(*previousLexeme));
+            } else if (previousToken->isIdentifier()) {
+                current->addNextChild(std::make_shared<ast::Variable>(*previousLexeme));
             }
  
             current = current->getParent();
-        } else if (currentToken.getType() == lexer::Token::Type::COMMA) {
-            if (previousToken.getType() == lexer::Token::Type::COMMA) {
+        } else if (currentToken->getType() == lexer::Token::Type::COMMA) {
+            if (previousToken->getType() == lexer::Token::Type::COMMA) {
                 throw ParserException("comma before comma");
-            } else if (previousToken.getType() == lexer::Token::Type::LEFT_PARENTHESIS) {
+            } else if (previousToken->getType() == lexer::Token::Type::LEFT_PARENTHESIS) {
                 throw ParserException("left parenthesis befor comma");
-            } else if (previousToken.isLiteral()) {
-                current->addNextChild(new ast::Literal(*previousLexeme));
-            } else if (previousToken.isIdentifier()) {
-                current->addNextChild(new ast::Variable(*previousLexeme));
+            } else if (previousToken->isLiteral()) {
+                current->addNextChild(std::make_shared<ast::Literal>(*previousLexeme));
+            } else if (previousToken->isIdentifier()) {
+                current->addNextChild(std::make_shared<ast::Variable>(*previousLexeme));
             }
         }
     }

@@ -16,6 +16,9 @@ namespace pear::pearlog {
         const ast::Term *getSource() const;
 
     private:
+        const ast::Variable *destination;
+        ast::Term *source;
+
         class Visitor : public ast::TermVisitor {
         public:
             Visitor(const ast::Variable *destination, ast::Term *source);
@@ -25,11 +28,8 @@ namespace pear::pearlog {
             virtual void visit(ast::Function* function) override;
 
         private:
-            const ast::Variable *const destination;
+            const ast::Variable *destination;
             ast::Term *source;
         };
-
-        std::shared_ptr<ast::Variable> destination;
-        std::shared_ptr<ast::Term> source;
     };
 }

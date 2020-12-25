@@ -8,7 +8,9 @@ namespace pear::lexer {
     class Lexeme {
     public:
         Lexeme() = default;
+        Lexeme(const Lexeme& lexeme) = default;
         Lexeme(const Token *token, const std::string& content, LexemePosition position);
+        Lexeme& operator=(const Lexeme& lexeme) = default;
 
         const Token *getToken() const;
         const std::string& getContent() const;
@@ -17,7 +19,7 @@ namespace pear::lexer {
         void updateGlobalLexerPosition(LexemePosition& position) const;
 
     private:
-        const Token * const token;
+        const Token * token = nullptr;
         std::string content;
         LexemePosition position;
     };

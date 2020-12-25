@@ -14,26 +14,27 @@ namespace pear::ast {
 
         Term() = default;
         Term(const lexer::Lexeme& lexeme);
+        Term(const Term& term);
 
         const lexer::Lexeme& getLexeme() const;
 
         bool hasParent() const;
         Term *getParent() const;
 
-        Term *addNextChild(Term *child);
+        Term *addNextChild(std::shared_ptr<Term> child);
         const List& getChildren() const;
 
         bool isVariable() const;
         bool isLiteral() const;
         bool isFunction() const;
 
-        void replace(Term *term);
+        void replace(std::shared_ptr<Term> term);
 
         virtual void accept(TermVisitor *visitor) = 0;
         virtual Pointer clone() const = 0;
 
     private:
-        void insertChild(const Iterator& iterator, Term* child);
+        void insertChild(const Iterator& iterator, std::shared_ptr<Term> child);
         void dropChild(const Iterator& iterator);
 
         lexer::Lexeme lexeme;

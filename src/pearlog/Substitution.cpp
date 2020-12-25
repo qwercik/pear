@@ -30,8 +30,8 @@ namespace pear::pearlog {
 
 
     Substitution::Substitution(const ast::Variable *destination, ast::Term *source) :
-        destination(destination->clone()),
-        source(source->clone())
+        destination(destination),
+        source(source)
     {
     }
 
