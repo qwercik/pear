@@ -2,14 +2,14 @@
 #include <pear/lexer/LexemePosition.hpp>
 
 namespace pear::lexer {
-    Lexeme::Lexeme(const Token& token, const std::string& content, LexemePosition position) :
+    Lexeme::Lexeme(const Token *token, const std::string& content, LexemePosition position) :
         token(token),
         content(content),
         position(position)
     {
     }
     
-    const Token& Lexeme::getToken() const {
+    const Token *Lexeme::getToken() const {
         return this->token;
     }
 
@@ -22,7 +22,7 @@ namespace pear::lexer {
     }
 
     void Lexeme::updateGlobalLexerPosition(LexemePosition& position) const {
-        if (this->getToken().getType() == Token::Type::NEWLINE) {
+        if (this->getToken()->getType() == Token::Type::NEWLINE) {
             position.columnNumber = 1;
             position.lineNumber++;
         }

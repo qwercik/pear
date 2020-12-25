@@ -8,13 +8,13 @@
 namespace pear::pearlog {
     Substitution::Visitor::Visitor(const ast::Variable *destination, ast::Term *source) :
         destination(destination),
-        source(source->clone())
+        source(source)
     {
     }
 
     void Substitution::Visitor::visit(ast::Variable* variable) {
         if (*this->destination == *variable) {
-            variable->replace(this->source->clone().get());
+            variable->replace(this->source->clone());
         }
     }
     
@@ -30,8 +30,8 @@ namespace pear::pearlog {
 
 
     Substitution::Substitution(const ast::Variable *destination, ast::Term *source) :
-        destination(destination),
-        source(source)
+        destination(destination->clone()),
+        source(source->clone())
     {
     }
 

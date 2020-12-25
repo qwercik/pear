@@ -29,7 +29,7 @@ namespace pear::pearlog {
             ast::Term *source;
         };
 
-        const ast::Variable *destination;
-        ast::Term *source;
+        std::shared_ptr<ast::Variable> destination;
+        std::shared_ptr<ast::Term> source;
     };
 }

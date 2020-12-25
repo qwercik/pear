@@ -21,13 +21,16 @@ int main(int argc, char *argv[]) {
 
     std::string code((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
-    pear::lexer::Lexer lexer(code);
-    auto lexemes = lexer.run();
+    pear::lexer::Lexer lexer;
+    auto lexemes = lexer.run(code);
+    for (const auto& lexeme : lexemes) {
+        std::cout << lexeme.getToken()->getDescription() << ": " << lexeme.getContent() << '\n';
+    }
 
-    pear::parser::Parser parser(lexemes);
-    auto ast = parser.run();
+    //pear::parser::Parser parser(lexemes);
+    //auto ast = parser.run();
 
-    pear::pearlog::Interpreter interpreter;
-    interpreter.execute(ast);
+    //pear::pearlog::Interpreter interpreter;
+    //interpreter.execute(ast);
 }
 
