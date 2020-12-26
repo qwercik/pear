@@ -3,28 +3,28 @@
 #include <pear/ast/TermPrinter.hpp>
 
 namespace pear::ast {
-    TermPrinter::TermPrinter(const Term *node) :
-        node(node)
+    TermPrinter::TermPrinter(const Term *term) :
+        term(term)
     {
     }
 
-    void TermPrinter::print(std::ostream& stream, const Term *node) {
-        if (node->isVariable()) {
-            stream << node->getLexeme().getContent();
-        } else if (node->isLiteral()) {
-            stream << node->getLexeme().getContent();
+    void TermPrinter::print(std::ostream& stream, const Term *term) {
+        if (term->getType() == Term::Type::VARIABLE) {
+            stream << term->getLexeme().getContent();
+        } else if (term->getType() == Term::Type::LITERAL) {
+            stream << term->getLexeme().getContent();
         } else {
-            stream << node->getLexeme().getContent() << "(";
-            
-            auto children = node->getChildren();
-            if (!children.empty()) {
-                auto it = children.begin();
-                TermPrinter::print(stream, it->get());
-                it++;
+            stream << term->getLexeme().getContent() << "(";
 
-                for (; it != children.end(); it++) {
+            auto children = term->getChildren();
+            if (!children.empty()) {
+                auto child = children.begin();
+                TermPrinter::print(stream, *child);
+                child++;
+
+                for (; child != children.end(); child++) {
                     stream << ", ";
-                    TermPrinter::print(stream, it->get());
+                    TermPrinter::print(stream, *child);
                 }
             }
 
@@ -33,7 +33,7 @@ namespace pear::ast {
     }
 
     std::ostream& operator<<(std::ostream& stream, const TermPrinter& printer) {
-        TermPrinter::print(stream, printer.node);
+        TermPrinter::print(stream, printer.term);
         return stream;
     }
 }

@@ -29,7 +29,6 @@ namespace pear::pearlog {
 
         std::cout << "Unifikuję termy: " << ast::TermPrinter(first) << " oraz " << ast::TermPrinter(second) << "\n\n";
 
-
         Unification unif(first, second);
 
         auto res = unif.getResult();

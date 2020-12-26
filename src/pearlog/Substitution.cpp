@@ -14,7 +14,8 @@ namespace pear::pearlog {
 
     void Substitution::Visitor::visit(ast::Variable* variable) {
         if (*this->destination == *variable) {
-            variable->replace(this->source->clone());
+            auto cloned = this->source->clone();
+            variable->replace(cloned);
         }
     }
     

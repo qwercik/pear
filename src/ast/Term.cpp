@@ -1,65 +1,104 @@
 #include <memory>
 #include <pear/lexer/Lexeme.hpp>
 #include <pear/ast/Term.hpp>
+#include <iostream>
 
 namespace pear::ast {
-    Term::Term(const lexer::Lexeme& lexeme) :
+    Term::Term(Term::Type type, const lexer::Lexeme& lexeme) :
+        type(type),
         lexeme(lexeme)
     {
     }
 
     Term::Term(const Term& term) {
+        this->type = term.type;
         this->lexeme = term.lexeme;
-        this->children = term.children;
-    }
 
-    const lexer::Lexeme& Term::getLexeme() const {
-        return this->lexeme;
+        for (const auto& child : term.children) {
+            this->children.push_back(std::make_unique<Term>(*child));
+        }
     }
 
     bool Term::hasParent() const {
-        return this->parent;
+        return this->parent != nullptr;
     }
     
     Term *Term::getParent() const {
         return this->parent;
     }
 
-    Term *Term::addNextChild(std::shared_ptr<Term> child) {
-        this->insertChild(this->children.end(), child);
-        return child.get();
+    Term *Term::addNextChild(Term::Pointer&& child) {
+        auto rawPointer = child.get();
+        this->insertChild(this->children.end(), std::move(child));
+        return rawPointer;
     }
 
-    const Term::List& Term::getChildren() const {
-        return this->children;
+    std::list<Term*> Term::getChildren() const {
+        std::list<Term*> children;
+        for (const auto& child : this->children) {
+            children.push_back(child.get());
+        }
+        
+        return children;
     }
 
-    bool Term::isVariable() const {
-        return this->lexeme.getToken()->isIdentifier() && this->children.empty();
+    std::list<Term::Pointer>&& Term::moveChildren() {
+        return std::move(this->children);
     }
 
-    bool Term::isLiteral() const {
-        return this->lexeme.getToken()->isLiteral();
+    const lexer::Lexeme& Term::getLexeme() const {
+        return this->lexeme;
     }
 
-    bool Term::isFunction() const {
-        return this->lexeme.getToken()->isIdentifier() && !this->children.empty();
+    Term::Type Term::getType() const {
+        return this->type;
     }
 
-    void Term::replace(std::shared_ptr<Term> term) {
+    Term *Term::replace(Term::Pointer&& term) {
         auto iterator = this->parentListIterator;
 
-        this->parent->insertChild(iterator, term);
+        this->parent->insertChild(iterator, std::move(term));
         this->parent->children.erase(iterator);
+
+        return term.get();
     }
 
-    void Term::insertChild(const Term::Iterator& iterator, std::shared_ptr<Term> child) {
+
+    bool Term::operator==(const Term& term) const {
+        if (this->type != term.type) {
+            return false;
+        }
+
+        auto firstIt = this->children.begin();
+        auto firstEnd = this->children.end();
+        auto secondIt = term.children.begin();
+        auto secondEnd = term.children.end();
+
+        while (firstIt != firstEnd && secondIt != secondEnd) {
+            if (**firstIt != **secondIt) {
+                return false;
+            }
+
+            firstIt++;
+            secondIt++;
+        }
+
+        // Test whether both containers have the same size
+        return firstIt == firstEnd && secondIt == secondEnd;
+    }
+
+    bool Term::operator!=(const Term& term) const {
+        return !(*this == term);
+    }
+
+
+    void Term::insertChild(const std::list<Term::Pointer>::iterator& iterator, Term::Pointer&& child) {
         child->parent = this;
-        this->children.insert(iterator, child);
         child->parentListIterator = iterator;
+        this->children.insert(iterator, std::move(child));
     }
 
-    void Term::dropChild(const Term::Iterator& iterator) {
+    void Term::dropChild(const std::list<Term::Pointer>::iterator& iterator) {
         this->children.erase(iterator);
     }
 }

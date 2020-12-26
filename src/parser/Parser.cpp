@@ -9,7 +9,6 @@
 #include <pear/ast/Function.hpp>
 #include <pear/ast/Variable.hpp>
 #include <pear/ast/Literal.hpp>
-#include <iostream>
 
 namespace pear::parser {
     Parser::Parser(const std::list<lexer::Lexeme>& lexemes) :
@@ -24,7 +23,7 @@ namespace pear::parser {
             throw ParserException("First token should always be an identifier");
         }
         previousLexeme = &lexemes.front();
-        root = std::shared_ptr<ast::Term>(new ast::Function(*previousLexeme));
+        root = std::make_unique<ast::Function>(*previousLexeme);
         current = root.get();
 
         for (auto it = std::next(this->lexemes.begin()); it != this->lexemes.end(); it++) {
@@ -34,13 +33,13 @@ namespace pear::parser {
             }
         }
 
-        return this->root->getChildren().front();
+        return std::move(this->root->moveChildren().front());
     }
 
     void Parser::handleLexeme(const lexer::Lexeme& currentLexeme) {
         auto currentToken = currentLexeme.getToken();
         auto previousToken = this->previousLexeme->getToken();
-    
+
         if (currentToken->isScalar() && previousToken->isScalar()) {
             throw ParserException("scalar near by scalar");
         } else if (currentToken->getType() == lexer::Token::Type::LEFT_PARENTHESIS) {
@@ -48,16 +47,16 @@ namespace pear::parser {
                 throw ParserException("wystąpił błąd");
             }
 
-            current = current->addNextChild(std::make_shared<ast::Function>(*previousLexeme));
+            current = current->addNextChild(std::make_unique<ast::Function>(*previousLexeme));
         } else if (currentToken->getType() == lexer::Token::Type::RIGHT_PARENTHESIS) {
             if (!current->hasParent()) {
                 throw ParserException("hasParent");
             } else if (previousToken->getType() == lexer::Token::Type::COMMA) {
                 throw ParserException("comma before right parenthesis");
             } else if (previousToken->isLiteral()) {
-                current->addNextChild(std::make_shared<ast::Literal>(*previousLexeme));
+                current->addNextChild(std::make_unique<ast::Literal>(*previousLexeme));
             } else if (previousToken->isIdentifier()) {
-                current->addNextChild(std::make_shared<ast::Variable>(*previousLexeme));
+                current->addNextChild(std::make_unique<ast::Variable>(*previousLexeme));
             }
  
             current = current->getParent();
@@ -67,9 +66,9 @@ namespace pear::parser {
             } else if (previousToken->getType() == lexer::Token::Type::LEFT_PARENTHESIS) {
                 throw ParserException("left parenthesis befor comma");
             } else if (previousToken->isLiteral()) {
-                current->addNextChild(std::make_shared<ast::Literal>(*previousLexeme));
+                current->addNextChild(std::make_unique<ast::Literal>(*previousLexeme));
             } else if (previousToken->isIdentifier()) {
-                current->addNextChild(std::make_shared<ast::Variable>(*previousLexeme));
+                current->addNextChild(std::make_unique<ast::Variable>(*previousLexeme));
             }
         }
     }

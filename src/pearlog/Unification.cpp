@@ -1,6 +1,8 @@
 #include <pear/pearlog/Unification.hpp>
 #include <pear/pearlog/Substitution.hpp>
 
+#include <iostream>
+
 namespace pear::pearlog {
     Unification::UnificationVisitor::UnificationVisitor(ast::Term *term, Unification::Result *result) :
         term(term),
@@ -66,7 +68,7 @@ namespace pear::pearlog {
     }
 
     void Unification::LiteralVisitor::visit(ast::Literal *literal) {
-        if (this->literal != literal) {
+        if (*this->literal != *literal) {
             this->result->error = true;
         }
     }

@@ -3,43 +3,44 @@
 #include <list>
 #include <memory>
 #include <pear/lexer/Lexeme.hpp>
-#include <pear/ast/TermVisitor.hpp>
 
 namespace pear::ast {
     class Term {
     public:
-        using Pointer = std::shared_ptr<Term>;
-        using List = std::list<Pointer>;
-        using Iterator = List::iterator;
+        using Pointer = std::unique_ptr<Term>;
 
-        Term() = default;
-        Term(const lexer::Lexeme& lexeme);
+        enum class Type {
+            VARIABLE,
+            FUNCTION,
+            LITERAL
+        };
+
+        Term(Type type, const lexer::Lexeme& lexeme);
         Term(const Term& term);
 
-        const lexer::Lexeme& getLexeme() const;
+        Term *replace(Pointer&& term);
+        Term *addNextChild(Pointer&& child);
+        std::list<Term*> getChildren() const;
+        std::list<Pointer>&& moveChildren();
 
         bool hasParent() const;
         Term *getParent() const;
 
-        Term *addNextChild(std::shared_ptr<Term> child);
-        const List& getChildren() const;
+        const lexer::Lexeme& getLexeme() const;
+        Type getType() const;
 
-        bool isVariable() const;
-        bool isLiteral() const;
-        bool isFunction() const;
-
-        void replace(std::shared_ptr<Term> term);
-
-        virtual void accept(TermVisitor *visitor) = 0;
-        virtual Pointer clone() const = 0;
+        bool operator==(const Term& term) const;
+        bool operator!=(const Term& term) const;
 
     private:
-        void insertChild(const Iterator& iterator, std::shared_ptr<Term> child);
-        void dropChild(const Iterator& iterator);
+        void insertChild(const std::list<Pointer>::iterator& iterator, Pointer&& child);
+        void dropChild(const std::list<Pointer>::iterator& iterator);
 
+        Type type;
         lexer::Lexeme lexeme;
+        std::list<Pointer> children;
+
         Term *parent = nullptr;
-        Iterator parentListIterator;
-        List children;
+        std::list<Pointer>::iterator parentListIterator;
     };
 }

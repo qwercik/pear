@@ -13,7 +13,7 @@ namespace pear::ast {
         static void print(std::ostream& stream, const Term *node);
 
     private:
-        const Term *node;
+        const Term *term;
     };
 }
 
