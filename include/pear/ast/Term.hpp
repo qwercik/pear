@@ -22,6 +22,7 @@ namespace pear::ast {
         Term *addNextChild(Pointer&& child);
         std::list<Term*> getChildren() const;
         std::list<Pointer>&& moveChildren();
+        Pointer move();
 
         bool hasParent() const;
         Term *getParent() const;
@@ -34,13 +35,13 @@ namespace pear::ast {
 
     private:
         void insertChild(const std::list<Pointer>::iterator& iterator, Pointer&& child);
-        void dropChild(const std::list<Pointer>::iterator& iterator);
 
         Type type;
         lexer::Lexeme lexeme;
         std::list<Pointer> children;
 
         Term *parent = nullptr;
+    public:
         std::list<Pointer>::iterator parentListIterator;
     };
 }

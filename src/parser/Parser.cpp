@@ -33,7 +33,7 @@ namespace pear::parser {
             }
         }
 
-        return std::move(this->root->moveChildren().front());
+        return this->root->getChildren().front()->move();
     }
 
     void Parser::handleLexeme(const lexer::Lexeme& currentLexeme) {

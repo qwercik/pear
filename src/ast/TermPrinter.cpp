@@ -33,6 +33,7 @@ namespace pear::ast {
     }
 
     std::ostream& operator<<(std::ostream& stream, const TermPrinter& printer) {
+        stream << printer.term->hasParent() << " ";
         TermPrinter::print(stream, printer.term);
         return stream;
     }

@@ -1,35 +1,23 @@
 #pragma once
 
-#include <list>
+#include <memory>
 #include <pear/ast/Term.hpp>
-#include <pear/ast/TermVisitor.hpp>
+#include <pear/ast/Variable.hpp>
 
 namespace pear::pearlog {
     class Substitution {
     public:
-        Substitution(const ast::Variable *destination, ast::Term *source);
+        Substitution(const ast::Term *destination, const ast::Term *source);
+        Substitution(const Substitution& substitution);
+
         void apply(ast::Term *term) const;
         void apply(Substitution &substitution) const;
-        void apply(std::list<Substitution>& substitutions) const;
  
-        const ast::Variable *getDestination() const;
+        const ast::Term *getDestination() const;
         const ast::Term *getSource() const;
 
     private:
-        const ast::Variable *destination;
-        ast::Term *source;
-
-        class Visitor : public ast::TermVisitor {
-        public:
-            Visitor(const ast::Variable *destination, ast::Term *source);
-
-            virtual void visit(ast::Literal* literal) override;
-            virtual void visit(ast::Variable* variable) override;
-            virtual void visit(ast::Function* function) override;
-
-        private:
-            const ast::Variable *destination;
-            ast::Term *source;
-        };
+        std::unique_ptr<ast::Term> destination;
+        std::unique_ptr<ast::Term> source;
     };
 }

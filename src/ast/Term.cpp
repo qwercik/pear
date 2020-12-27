@@ -1,6 +1,7 @@
 #include <memory>
 #include <pear/lexer/Lexeme.hpp>
 #include <pear/ast/Term.hpp>
+#include <pear/ast/TermPrinter.hpp>
 #include <iostream>
 
 namespace pear::ast {
@@ -13,10 +14,16 @@ namespace pear::ast {
     Term::Term(const Term& term) {
         this->type = term.type;
         this->lexeme = term.lexeme;
+        this->parent = nullptr;
 
         for (const auto& child : term.children) {
-            this->children.push_back(std::make_unique<Term>(*child));
+            auto childCopy = std::make_unique<Term>(*child);
+            childCopy->parent = this;
+            auto iterator = this->children.insert(this->children.end(), std::move(childCopy));
+            (*iterator)->parentListIterator = iterator;
         }
+
+        std::cout << "po skopiowaniu " << TermPrinter(this) << '\n';
     }
 
     bool Term::hasParent() const {
@@ -28,9 +35,9 @@ namespace pear::ast {
     }
 
     Term *Term::addNextChild(Term::Pointer&& child) {
-        auto rawPointer = child.get();
+        auto pointer = child.get();
         this->insertChild(this->children.end(), std::move(child));
-        return rawPointer;
+        return pointer;
     }
 
     std::list<Term*> Term::getChildren() const {
@@ -46,6 +53,17 @@ namespace pear::ast {
         return std::move(this->children);
     }
 
+    Term::Pointer Term::move() {
+        if (this->parent == nullptr) {
+            // to nie powinno mieć miejsca
+        }
+
+        auto pointer = std::move(*this->parentListIterator);
+        this->parent->children.erase(this->parentListIterator);
+        this->parent = nullptr;
+        return pointer;
+    }
+
     const lexer::Lexeme& Term::getLexeme() const {
         return this->lexeme;
     }
@@ -55,12 +73,18 @@ namespace pear::ast {
     }
 
     Term *Term::replace(Term::Pointer&& term) {
-        auto iterator = this->parentListIterator;
+        std::cout << "Jestem w termie 1 " << this->getLexeme().getContent() << " " << this->hasParent() << '\n';
+        std::cout << "Jestem w termie 2 " << term->getLexeme().getContent() << " " << term->hasParent() << '\n';
 
-        this->parent->insertChild(iterator, std::move(term));
-        this->parent->children.erase(iterator);
+        std::cout << "begin\n";
+        std::cout << (*this->parentListIterator)->getLexeme().getContent() << '\n';
+        std::cout << "end\n";
 
-        return term.get();
+        auto pointer = term.get();
+        term->parent = this->parent;
+        term->parentListIterator = this->parentListIterator;
+        *this->parentListIterator = std::move(term);
+        return pointer;
     }
 
 
@@ -94,12 +118,8 @@ namespace pear::ast {
 
     void Term::insertChild(const std::list<Term::Pointer>::iterator& iterator, Term::Pointer&& child) {
         child->parent = this;
-        child->parentListIterator = iterator;
-        this->children.insert(iterator, std::move(child));
-    }
-
-    void Term::dropChild(const std::list<Term::Pointer>::iterator& iterator) {
-        this->children.erase(iterator);
+        auto newIterator = this->children.insert(iterator, std::move(child));
+        (*newIterator)->parentListIterator = newIterator;
     }
 }
 

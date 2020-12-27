@@ -6,6 +6,6 @@
 namespace pear::pearlog {
     class Interpreter : public Executor {
     public:
-        virtual void execute(ast::Term::Pointer tree) override;
+        virtual void execute(ast::Term::Pointer&& term) override;
     };
 };

@@ -27,9 +27,7 @@ int main(int argc, char *argv[]) {
     pear::parser::Parser parser(lexemes);
     auto ast = parser.run();
 
-    std::cout << pear::ast::TermPrinter(ast.get()) << '\n';
-
-    // pear::pearlog::Interpreter interpreter;
-    // interpreter.execute(ast);
+    pear::pearlog::Interpreter interpreter;
+    interpreter.execute(std::move(ast));
 }
 

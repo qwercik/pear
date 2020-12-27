@@ -7,14 +7,15 @@
 #include <pear/pearlog/Unification.hpp>
 
 namespace pear::pearlog {
-    void Interpreter::execute(ast::Term::Pointer node) {
-        if (!node->isFunction() || node->getLexeme().getContent() != "module") {
+    void Interpreter::execute(ast::Term::Pointer&& term) {
+        std::cout << "Początek\n";
+        if (term->getType() != ast::Term::Type::FUNCTION || term->getLexeme().getContent() != "module") {
             throw InterpreterException(
                 "Each program file should be nested in global module() function"
             );
         }
 
-        auto children = node->getChildren();
+        auto children = term->getChildren();
         if (children.size() != 2) {
             throw InterpreterException(
                 "module should have 2 params"
@@ -24,22 +25,21 @@ namespace pear::pearlog {
         auto firstIt = children.begin();
         auto secondIt = std::next(firstIt);
 
-        auto first = (*firstIt).get();
-        auto second = (*secondIt).get();
+        auto first = *firstIt;
+        auto second = *secondIt;
 
         std::cout << "Unifikuję termy: " << ast::TermPrinter(first) << " oraz " << ast::TermPrinter(second) << "\n\n";
 
-        Unification unif(first, second);
+        Unification unification(first, second);
+        auto res = unification.getResult();
 
-        auto res = unif.getResult();
-      
-        if (res.error) {
-            std::cout << "Nie udało się wykonać unifikacji\n";
-        } else {
+        if (res.isOk()) {
             std::cout << "Udało się wykonać unifikację\n";
+        } else {
+            std::cout << "Nie udało się wykonać unifikacji\n";
         }
  
-        for (const auto& subst : res.substitutions) {
+        for (const auto& subst : res.getSubstitutions()) {
             auto dst = subst.getDestination();
             auto src = subst.getSource();
 

@@ -6,60 +6,38 @@
 #include <iostream>
 
 namespace pear::pearlog {
-    Substitution::Visitor::Visitor(const ast::Variable *destination, ast::Term *source) :
-        destination(destination),
-        source(source)
+    Substitution::Substitution(const ast::Term *destination, const ast::Term *source) :
+        destination(std::make_unique<ast::Term>(*destination)),
+        source(std::make_unique<ast::Term>(*source))
     {
     }
 
-    void Substitution::Visitor::visit(ast::Variable* variable) {
-        if (*this->destination == *variable) {
-            auto cloned = this->source->clone();
-            variable->replace(cloned);
-        }
-    }
-    
-    void Substitution::Visitor::visit(ast::Literal* literal) {
-
-    }
-
-    void Substitution::Visitor::visit(ast::Function* function) {
-        for (auto& child : function->getArguments()) {
-            child->accept(this); // ?!?
-        }
-    }
-
-
-    Substitution::Substitution(const ast::Variable *destination, ast::Term *source) :
-        destination(destination),
-        source(source)
+    Substitution::Substitution(const Substitution& substitution) :
+        Substitution::Substitution(substitution.destination.get(), substitution.source.get())
     {
     }
 
     void Substitution::apply(ast::Term* term) const {
-        Visitor visitor(this->destination, this->source);
-        term->accept(&visitor);
+        if (term->getType() == ast::Term::Type::VARIABLE) {
+            if (*this->destination == *term) {
+                term->replace(std::make_unique<ast::Term>(*this->source));
+            }
+        } else if (term->getType() == ast::Term::Type::FUNCTION) {
+            for (const auto child : term->getChildren()) {
+                this->apply(child);
+            }
+        }
     }
 
     void Substitution::apply(Substitution& substitution) const {
-        this->apply(substitution.source);
+        this->apply(substitution.source.get());
     }
 
-    void Substitution::apply(std::list<Substitution>& substitutions) const {
-        for (auto& substitution : substitutions) {
-            this->apply(substitution);
-        }
-
-        substitutions.push_back(*this);
-    }
-
-
-    const ast::Variable *Substitution::getDestination() const {
-        return this->destination;
+    const ast::Term *Substitution::getDestination() const {
+        return this->destination.get();
     }
 
     const ast::Term *Substitution::getSource() const {
-        return this->source;
+        return this->source.get();
     }
 }
-
