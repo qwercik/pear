@@ -1,37 +1,29 @@
 #include <pear/pearlog/Unification.hpp>
+#include <pear/pearlog/UnificationException.hpp>
 #include <pear/pearlog/Substitution.hpp>
 #include <pear/lexer/Lexeme.hpp>
 #include <pear/lexer/LexemePosition.hpp>
 #include <iostream>
+#include <pear/ast/TermPrinter.hpp>
 
 
 namespace pear::pearlog {
-    Unification::Result::Result(const Unification::Result& result) :
-        error(result.error),
-        substitutions(result.substitutions),
-        term(result.term ? result.term->clone() : nullptr) 
-    {
-    }
-
     const std::list<Substitution>& Unification::Result::getSubstitutions() const {
         return this->substitutions;
     }
 
-    ast::Term *Unification::Result::getTerm() const {
-        return this->term.get();
+    const ast::Term::Pointer& Unification::Result::getTerm() const {
+        // It doesn't matter whether we return first or second token
+        // If unification goes correctly, they will be the same
+        return this->first;
     }
 
-    bool Unification::Result::isOk() const {
-        return !this->error;
-    }
-
-
-    Unification::Unification(const ast::Term::Pointer& first, const ast::Term::Pointer& second) :
-        first(first->clone()),
-        second(second->clone())
+    Unification::Unification(const ast::Term::Pointer& first, const ast::Term::Pointer& second)
     {
-        unifyBackend(this->first, this->second);
-        this->result.term = std::move(this->first);
+        this->result.first = first->clone();
+        this->result.second = second->clone();
+
+        unifyBackend(this->result.first, this->result.second);
     }
 
     const Unification::Result& Unification::getResult() const {
@@ -42,8 +34,8 @@ namespace pear::pearlog {
         if (first->getType() == ast::Term::Type::VARIABLE) {
             if (second->getType() != ast::Term::Type::VARIABLE || *first != *second) {
                 auto substitution = Substitution(first, second);
-                substitution.apply(this->first);
-                substitution.apply(this->second);
+                substitution.apply(this->result.first);
+                substitution.apply(this->result.second);
 
                 for (auto& other : this->result.substitutions) {
                     substitution.apply(other);
@@ -56,20 +48,19 @@ namespace pear::pearlog {
                 this->unifyBackend(second, first);
             } else if (second->getType() == ast::Term::Type::LITERAL) {
                 if (*first != *second) {
-                    this->result.error = true;
-                    // Maybe throw an exception?
+                    throw UnificationException("Unification error");
                 }
             } else {
-                this->result.error = true;
+                throw UnificationException("Unification error");
             }
         } else {
             if (second->getType() == ast::Term::Type::VARIABLE) {
                 this->unifyBackend(second, first);
             } else if (second->getType() == ast::Term::Type::LITERAL) {
-                this->result.error = true;
+                throw UnificationException("Unification error");
             } else {
                 if (first->getLexeme().getContent() != second->getLexeme().getContent()) {
-                    this->result.error = true;
+                    throw UnificationException("Unification error");
                 } else {
                     auto firstIt = first->getChildren().begin();
                     auto firstEnd = first->getChildren().end();
@@ -82,8 +73,8 @@ namespace pear::pearlog {
                         secondIt++;
                     }
 
-                    if (firstIt != firstEnd && secondIt != secondEnd) {
-                        result.error = true;
+                    if (firstIt != firstEnd || secondIt != secondEnd) {
+                        throw UnificationException("Unification error");
                     }
                 }
             }

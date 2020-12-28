@@ -31,5 +31,13 @@ namespace pear::lexer {
         position.columnNumber += contentSize;
         position.offset += contentSize;
     }
+
+    bool Lexeme::operator==(const Lexeme& lexeme) const {
+        return this->token == lexeme.token && this->content == lexeme.content;
+    }
+
+    bool Lexeme::operator!=(const Lexeme& lexeme) const {
+        return !(*this == lexeme);
+    }
 }
 

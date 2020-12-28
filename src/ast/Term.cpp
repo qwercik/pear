@@ -75,7 +75,7 @@ namespace pear::ast {
     }
 
     bool Term::operator==(const Term& term) const {
-        if (this->type != term.type) {
+        if (this->type != term.type || this->lexeme != term.lexeme) {
             return false;
         }
 

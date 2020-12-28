@@ -5,6 +5,7 @@
 #include <pear/ast/TermPrinter.hpp>
 
 #include <pear/pearlog/Unification.hpp>
+#include <pear/pearlog/UnificationException.hpp>
 
 namespace pear::pearlog {
     void Interpreter::execute(const ast::Term::Pointer& term) {
@@ -29,20 +30,26 @@ namespace pear::pearlog {
 
         std::cout << "Unifikuję termy: " << ast::TermPrinter(first) << " oraz " << ast::TermPrinter(second) << "\n\n";
 
-        Unification unification(first, second);
-        auto res = unification.getResult();
 
-        if (res.isOk()) {
+        try {
+            Unification unification(first, second);
+            auto& res = unification.getResult();
+
             std::cout << "Udało się wykonać unifikację\n";
-        } else {
-            std::cout << "Nie udało się wykonać unifikacji\n";
-        }
- 
-        for (const auto& subst : res.getSubstitutions()) {
-            auto& dst = subst.getDestination();
-            auto& src = subst.getSource();
 
-            std::cout << ast::TermPrinter(dst) << " = " << ast::TermPrinter(src) << '\n';
+            for (const auto& subst : res.getSubstitutions()) {
+                auto& dst = subst.getDestination();
+                auto& src = subst.getSource();
+
+                std::cout << ast::TermPrinter(dst) << " = " << ast::TermPrinter(src) << '\n';
+            }
+
+            std::cout << '\n';
+            std::cout << "Term po podstawieniu: " << ast::TermPrinter(res.getTerm()) << '\n';
+        } catch (const UnificationException& exception) {
+            std::cout << "Nie udało się wykonać unifikacji\n";
+        } catch (...) {
+            std::cout << "Wystąpił jakiś błąd\n";
         }
     }
 };

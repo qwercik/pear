@@ -18,6 +18,9 @@ namespace pear::lexer {
 
         void updateGlobalLexerPosition(LexemePosition& position) const;
 
+        bool operator==(const Lexeme& lexeme) const;
+        bool operator!=(const Lexeme& lexeme) const;
+
     private:
         const Token * token = nullptr;
         std::string content;

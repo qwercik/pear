@@ -12,19 +12,15 @@ namespace pear::pearlog {
     public:
         class Result {
         public:
-            Result() = default;
-            Result(const Result& result);
+            friend class Unification;
 
             const std::list<Substitution>& getSubstitutions() const;
-            ast::Term *getTerm() const;
-            bool isOk() const;
-
-            friend class Unification;
+            const ast::Term::Pointer& getTerm() const;
 
         private:
             std::list<Substitution> substitutions;
-            std::unique_ptr<ast::Term> term;
-            bool error = false;
+            std::unique_ptr<ast::Term> first;
+            std::unique_ptr<ast::Term> second;
         };
 
         Unification(const ast::Term::Pointer& first, const ast::Term::Pointer& second);
@@ -33,8 +29,6 @@ namespace pear::pearlog {
     private:
         void unifyBackend(const ast::Term::Pointer& first, const ast::Term::Pointer& second);
 
-        std::unique_ptr<ast::Term> first;
-        std::unique_ptr<ast::Term> second;
         Result result;
     };
 }
