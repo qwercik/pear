@@ -15,41 +15,8 @@ namespace pear::pearlog {
             );
         }
 
-        auto& children = term->getChildren();
-        if (children.size() != 2) {
-            throw InterpreterException(
-                "module should have 2 params"
-            );
-        }
-
-        auto firstIt = children.begin();
-        auto secondIt = std::next(firstIt);
-
-        auto& first = *firstIt;
-        auto& second = *secondIt;
-
-        std::cout << "Unifikuję termy: " << ast::TermPrinter(first) << " oraz " << ast::TermPrinter(second) << "\n\n";
-
-
-        try {
-            Unification unification(first, second);
-            auto& res = unification.getResult();
-
-            std::cout << "Udało się wykonać unifikację\n";
-
-            for (const auto& subst : res.getSubstitutions()) {
-                auto& dst = subst.getDestination();
-                auto& src = subst.getSource();
-
-                std::cout << ast::TermPrinter(dst) << " = " << ast::TermPrinter(src) << '\n';
-            }
-
-            std::cout << '\n';
-            std::cout << "Term po podstawieniu: " << ast::TermPrinter(res.getTerm()) << '\n';
-        } catch (const UnificationException& exception) {
-            std::cout << "Nie udało się wykonać unifikacji\n";
-        } catch (...) {
-            std::cout << "Wystąpił jakiś błąd\n";
+        for (const auto& moduleEntry : term->getChildren()) {
+            std::cout << moduleEntry->getLexeme().getContent() << '\n';
         }
     }
 };

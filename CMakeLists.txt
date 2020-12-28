@@ -26,9 +26,18 @@ add_executable(pear
     include/pear/pearlog/Interpreter.hpp
     include/pear/pearlog/Substitution.hpp
     include/pear/pearlog/Unification.hpp
+    include/pear/pearlog/PredicatesManager.hpp
     src/pearlog/Interpreter.cpp
     src/pearlog/Substitution.cpp
     src/pearlog/Unification.cpp
+    src/pearlog/PredicatesManager.cpp
+
+    include/pear/pearlog/predicates/Print.hpp
+    include/pear/pearlog/predicates/False.hpp
+    include/pear/pearlog/predicates/True.hpp
+    src/pearlog/predicates/Print.cpp
+    src/pearlog/predicates/False.cpp
+    src/pearlog/predicates/True.cpp
 )
 target_include_directories(pear PUBLIC include/)
 

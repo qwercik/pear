@@ -10,8 +10,8 @@ module(
       append(list(head), tail, list),
       quicksort_partition(key, tail, previous_left, previous_right),
       or(
-        and(le(head, key), append([head], previous_left, left))
-        and(lt(key, head), append([head], previous_right, right))
+        and(le(head, key), append(list(head), previous_left, left))
+        and(lt(key, head), append(list(head), previous_right, right))
       )
     )
   )),
