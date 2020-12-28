@@ -1,24 +1,27 @@
 module(
-    def(fibonacci(0, 0)),
-    def(fibonacci(1, 1)),
-    def(fibonacci(index, value), block(
-        gt(index, 1),
-        eval(sub(index, 1), index_1),
-        eval(sub(index, 2), index_2),
-        fibonacci(index_1, value_1),
-        fibonacci(index_2, value_2),
-        eval(add(value_1, value_2), value)
+    def(fibonacci(index, value), or(
+        unify(fibonacci(index, value), fibonacci(0, 0)),
+        unify(fibonacci(index, value), fibonacci(1, 1)),
+        and(
+            gt(index, 1),
+            eval(sub(index, 1), index_1),
+            eval(sub(index, 2), index_2),
+            fibonacci(index_1, value_1),
+            fibonacci(index_2, value_2),
+            eval(add(value_1, value_2), value)
+        )
     )),
 
-    def(main, block(
-        print('Program liczy elementy ciągu Fibonacciego'),
-        print('Podaj n: '),
-        read('%d', n),
-        fibonacci(n, value),
-        print('F(%d) = %d', n, value),
-        break()
-    )),
-    def(main, block(
-        print('Nie da się policzyć takiej wartości ciągu Fibonacciego :(')
+    query(or(
+        and(
+            print('Program liczy elementy ciągu Fibonacciego\n'),
+            print('Podaj n: '),
+            read(n_str),
+            int(n_str, n),
+            fibonacci(n, value),
+            print('F({}) = {}', n, value),
+            break()
+        ),
+        print('Nie udało się policzyć takiej wartości ciągu Fibonacciego :(')
     ))
 )

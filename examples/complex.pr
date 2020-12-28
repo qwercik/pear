@@ -3,33 +3,55 @@ module(
     version('0.0.1'),
     description('Complex number implementation'),
 
-    def(eval(complex(a, b), complex(a, b))),
+    def(eval(expression, result), or(
+        and(
+            unify(expression, complex(a, b)),
+            unify(result, complex(a, b)),
+            break()
+        ),
+        and(
+            unify(expression, add(subexpression_1, subexpression_2)),
+            or(
+                and(
+                    unify(subexpression_1, complex(real_1, imaginary_1)),
+                    unify(subexpression_2, complex(real_2, imaginary_2)),
+                    eval(add(real_1, real_2), real),
+                    eval(add(imaginary_1, imaginary_2), imaginary),
+                    unify(result, complex(real, imaginary))
+                    break()
+                ),
+                and(
+                    eval(subexpression_1, result_1),
+                    eval(subexpression_2, result_2),
+                    eval(sub(subexpression_1, subexpression_2), result),
+                    break()
+                )
+            )
+        ),
+        and(
+            unify(expression, sub(subexpression_1, subexpression_2)),
+            or(
+                and(
+                    unify(subexpression_1, complex(real_1, imaginary_1)),
+                    unify(subexpression_2, complex(real_2, imaginary_2)),
+                    eval(sub(real_1, real_2), real),
+                    eval(sub(imaginary_1, imaginary_2), imaginary),
+                    unify(result, complex(real, imaginary))
+                    break()
+                ),
+                and(
+                    eval(subexpression_1, result_1),
+                    eval(subexpression_2, result_2),
+                    eval(sub(subexpression_1, subexpression_2), result),
+                    break()
+                )
+            )
+        )
+    )),
 
-    def(eval(add(complex(real_1, imaginary_1), complex(real_2, imaginary_2)), complex(real, imaginary)), block(
-        eval(add(real_1, real_2), real),
-        eval(add(imaginary_1, imaginary_2), imaginary)
-        break()
-    )),
-    def(eval(add(expression_1, expression_2), result), block(
-        eval(expression_1, result_1),
-        eval(expression_2, result_2),
-        eval(add(result_1, result_2), result)
-    )),
-
-    def(eval(sub(complex(real_1, imaginary_1), complex(real_2, imaginary_2)), complex(real, imaginary)), block(
-        eval(sub(real_1, real_2), real),
-        eval(sub(imaginary_1, imaginary_2), imaginary)
-        break()
-    )),
-    def(eval(sub(expression_1, expression_2), result), block(
-        eval(expression_1, result_1),
-        eval(expression_2, result_2),
-        eval(sub(result_1, result_2), result)
-    )),
-
-    def(str(complex(a, b), result), block(
-        str(a, astr),
-        str(b, bstr),
-        str_concat(astr, ' + ', bstr, 'i', result)
+    def(string(complex(a, b), result), and(
+        string(a, a_string),
+        string(b, b_string),
+        string_concat(a_string, ' + ', b_string, 'i', result)
     )
 )

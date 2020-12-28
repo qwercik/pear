@@ -1,10 +1,10 @@
 module(
-    def(main, block(
+    query(and(
         unify(g, 1410),
         unify(w, 997),
-        unify(gwc_equation, div(g, w)),
-        eval(gwc_equation, gwc),
-        print('sqrt(2) w przybliżeniu wynosi %f', gwc)
+        unify(gw_formula, div(g, w)),
+        eval(gw_formula, gw),
+        print('srt(2) w przybliżeniu wynosi {}', gw)
     ))
 )
 

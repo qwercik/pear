@@ -1,17 +1,16 @@
 module(
-    import('complex.pr'),
-    
-    def(main, block(
-        comment('To jest komentarz'),
-        print('Program liczy sumę liczb zespolonych\n'),
-
+    import(complex, 'complex.pr'),
+    query(and(
+        print('Program liczy sumę liczb zespolonych'),
         print('Podaj pierwszą liczbę: '),
         read('%d %d', a, b),
-
         print('Podaj drugą liczbę: '),
-        read('%d %d', c, d),
+        read('%d %d', a, b),
+        complex(eval(
+            add(complex(a, b), complex(c, d)),
+            result
+        )),
 
-        eval(add(complex(a, b), complex(c, d)), result),
         print(result)
     ))
 )

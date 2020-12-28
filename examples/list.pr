@@ -1,6 +1,0 @@
-module(
-    def(head(list, head), argument(list, 0, head)),
-    def(tail(list, tail), and(
-        
-    ))
-)
