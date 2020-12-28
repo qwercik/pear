@@ -18,30 +18,26 @@ namespace pear::ast {
         Term(Type type, const lexer::Lexeme& lexeme);
         Term(const Term& term);
 
-        Term *replace(Pointer&& term);
-        Term *addNextChild(Pointer&& child);
-        std::list<Term*> getChildren() const;
-        std::list<Pointer>&& moveChildren();
-        Pointer move();
+        void addNextChild(Pointer&& term);
+        void replaceChild(std::list<Pointer>::iterator iterator, Pointer&& term);
+        void insertChild(std::list<Pointer>::iterator iterator, Pointer&& term);
+        Pointer dropChild(std::list<Pointer>::iterator iterator);
 
         bool hasParent() const;
         Term *getParent() const;
-
-        const lexer::Lexeme& getLexeme() const;
         Type getType() const;
+        const lexer::Lexeme& getLexeme() const;
+        std::list<Term*> getChildren() const;
+        std::list<Pointer>::iterator getParentListIterator() const;
 
         bool operator==(const Term& term) const;
         bool operator!=(const Term& term) const;
 
     private:
-        void insertChild(const std::list<Pointer>::iterator& iterator, Pointer&& child);
-
         Type type;
         lexer::Lexeme lexeme;
         std::list<Pointer> children;
-
         Term *parent = nullptr;
-    public:
         std::list<Pointer>::iterator parentListIterator;
     };
 }

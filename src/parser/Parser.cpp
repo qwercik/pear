@@ -33,7 +33,9 @@ namespace pear::parser {
             }
         }
 
-        return this->root->getChildren().front()->move();
+        auto it = this->root->getChildren().front()->getParentListIterator();
+
+        return this->root->dropChild(it);
     }
 
     void Parser::handleLexeme(const lexer::Lexeme& currentLexeme) {
@@ -47,7 +49,10 @@ namespace pear::parser {
                 throw ParserException("wystąpił błąd");
             }
 
-            current = current->addNextChild(std::make_unique<ast::Function>(*previousLexeme));
+            auto function = std::make_unique<ast::Function>(*previousLexeme);
+            auto rawPointer = function.get();
+            current->addNextChild(std::move(function));
+            current = rawPointer;
         } else if (currentToken->getType() == lexer::Token::Type::RIGHT_PARENTHESIS) {
             if (!current->hasParent()) {
                 throw ParserException("hasParent");

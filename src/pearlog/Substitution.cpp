@@ -20,7 +20,12 @@ namespace pear::pearlog {
     void Substitution::apply(ast::Term* term) const {
         if (term->getType() == ast::Term::Type::VARIABLE) {
             if (*this->destination == *term) {
-                term->replace(std::make_unique<ast::Term>(*this->source));
+                if (term->hasParent()) {
+                    throw new int(997);
+                }
+
+                auto iterator = term->getParentListIterator();
+                term->getParent()->replaceChild(iterator, std::make_unique<ast::Term>(*this->source));
             }
         } else if (term->getType() == ast::Term::Type::FUNCTION) {
             for (const auto child : term->getChildren()) {

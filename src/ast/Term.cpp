@@ -17,13 +17,33 @@ namespace pear::ast {
         this->parent = nullptr;
 
         for (const auto& child : term.children) {
-            auto childCopy = std::make_unique<Term>(*child);
-            childCopy->parent = this;
-            auto iterator = this->children.insert(this->children.end(), std::move(childCopy));
-            (*iterator)->parentListIterator = iterator;
+            this->addNextChild(std::make_unique<Term>(*child));
         }
+    }
 
-        std::cout << "po skopiowaniu " << TermPrinter(this) << '\n';
+
+    void Term::addNextChild(Term::Pointer&& term) {
+        this->insertChild(this->children.end(), std::move(term));
+    }
+
+    void Term::replaceChild(std::list<Term::Pointer>::iterator iterator, Term::Pointer&& term) {
+        *iterator = std::move(term);
+        (*iterator)->parent = this;
+        (*iterator)->parentListIterator = iterator;
+    }
+
+    void Term::insertChild(std::list<Term::Pointer>::iterator iterator, Term::Pointer&& term) {
+        iterator = this->children.insert(iterator, std::move(term));
+        (*iterator)->parent = this;
+        (*iterator)->parentListIterator = iterator;
+    }
+
+    Term::Pointer Term::dropChild(std::list<Term::Pointer>::iterator iterator) {
+        auto pointer = std::move(*iterator);
+        this->children.erase(iterator);
+        pointer->parent = nullptr;
+
+        return pointer;
     }
 
     bool Term::hasParent() const {
@@ -34,12 +54,14 @@ namespace pear::ast {
         return this->parent;
     }
 
-    Term *Term::addNextChild(Term::Pointer&& child) {
-        auto pointer = child.get();
-        this->insertChild(this->children.end(), std::move(child));
-        return pointer;
+    Term::Type Term::getType() const {
+        return this->type;
     }
 
+    const lexer::Lexeme& Term::getLexeme() const {
+        return this->lexeme;
+    }
+    
     std::list<Term*> Term::getChildren() const {
         std::list<Term*> children;
         for (const auto& child : this->children) {
@@ -49,44 +71,9 @@ namespace pear::ast {
         return children;
     }
 
-    std::list<Term::Pointer>&& Term::moveChildren() {
-        return std::move(this->children);
+    std::list<Term::Pointer>::iterator Term::getParentListIterator() const {
+        return this->parentListIterator;
     }
-
-    Term::Pointer Term::move() {
-        if (this->parent == nullptr) {
-            // to nie powinno mieć miejsca
-        }
-
-        auto pointer = std::move(*this->parentListIterator);
-        this->parent->children.erase(this->parentListIterator);
-        this->parent = nullptr;
-        return pointer;
-    }
-
-    const lexer::Lexeme& Term::getLexeme() const {
-        return this->lexeme;
-    }
-
-    Term::Type Term::getType() const {
-        return this->type;
-    }
-
-    Term *Term::replace(Term::Pointer&& term) {
-        std::cout << "Jestem w termie 1 " << this->getLexeme().getContent() << " " << this->hasParent() << '\n';
-        std::cout << "Jestem w termie 2 " << term->getLexeme().getContent() << " " << term->hasParent() << '\n';
-
-        std::cout << "begin\n";
-        std::cout << (*this->parentListIterator)->getLexeme().getContent() << '\n';
-        std::cout << "end\n";
-
-        auto pointer = term.get();
-        term->parent = this->parent;
-        term->parentListIterator = this->parentListIterator;
-        *this->parentListIterator = std::move(term);
-        return pointer;
-    }
-
 
     bool Term::operator==(const Term& term) const {
         if (this->type != term.type) {
@@ -113,13 +100,6 @@ namespace pear::ast {
 
     bool Term::operator!=(const Term& term) const {
         return !(*this == term);
-    }
-
-
-    void Term::insertChild(const std::list<Term::Pointer>::iterator& iterator, Term::Pointer&& child) {
-        child->parent = this;
-        auto newIterator = this->children.insert(iterator, std::move(child));
-        (*newIterator)->parentListIterator = newIterator;
     }
 }
 
