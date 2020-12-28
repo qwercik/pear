@@ -6,14 +6,14 @@
 namespace pear::ast {
     class TermPrinter {
     public:
-        TermPrinter(const Term *node);
-        friend std::ostream& operator<<(std::ostream& stream, const TermPrinter& node);
+        TermPrinter(const Term::Pointer& term);
+        friend std::ostream& operator<<(std::ostream& stream, const TermPrinter& term);
 
     protected:
-        static void print(std::ostream& stream, const Term *node);
+        static void print(std::ostream& stream, const Term::Pointer& term);
 
     private:
-        const Term *term;
+        const Term::Pointer& term;
     };
 }
 

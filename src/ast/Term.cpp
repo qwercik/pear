@@ -26,19 +26,19 @@ namespace pear::ast {
         this->insertChild(this->children.end(), std::move(term));
     }
 
-    void Term::replaceChild(std::list<Term::Pointer>::iterator iterator, Term::Pointer&& term) {
+    void Term::replaceChild(Term::Iterator iterator, Term::Pointer&& term) {
         *iterator = std::move(term);
         (*iterator)->parent = this;
         (*iterator)->parentListIterator = iterator;
     }
 
-    void Term::insertChild(std::list<Term::Pointer>::iterator iterator, Term::Pointer&& term) {
+    void Term::insertChild(Term::Iterator iterator, Term::Pointer&& term) {
         iterator = this->children.insert(iterator, std::move(term));
         (*iterator)->parent = this;
         (*iterator)->parentListIterator = iterator;
     }
 
-    Term::Pointer Term::dropChild(std::list<Term::Pointer>::iterator iterator) {
+    Term::Pointer Term::dropChild(Term::Iterator iterator) {
         auto pointer = std::move(*iterator);
         this->children.erase(iterator);
         pointer->parent = nullptr;
@@ -50,7 +50,7 @@ namespace pear::ast {
         return this->parent != nullptr;
     }
     
-    Term *Term::getParent() const {
+    Term *Term::getParent() {
         return this->parent;
     }
 
@@ -62,16 +62,15 @@ namespace pear::ast {
         return this->lexeme;
     }
     
-    std::list<Term*> Term::getChildren() const {
-        std::list<Term*> children;
-        for (const auto& child : this->children) {
-            children.push_back(child.get());
-        }
-        
-        return children;
+    const Term::List& Term::getChildren() const {
+        return this->children;
     }
 
-    std::list<Term::Pointer>::iterator Term::getParentListIterator() const {
+    Term::List& Term::getChildren() {
+        return this->children;
+    }
+
+    Term::Iterator Term::getParentListIterator() const {
         return this->parentListIterator;
     }
 
@@ -101,5 +100,8 @@ namespace pear::ast {
     bool Term::operator!=(const Term& term) const {
         return !(*this == term);
     }
-}
 
+    Term::Pointer Term::clone() const {
+        return std::make_unique<Term>(*this);
+    }
+}

@@ -27,11 +27,11 @@ namespace pear::pearlog {
             bool error = false;
         };
 
-        Unification(ast::Term *first, ast::Term *second);
+        Unification(const ast::Term::Pointer& first, const ast::Term::Pointer& second);
         const Result& getResult() const;
 
     private:
-        void unifyBackend(ast::Term *first, ast::Term *second);
+        void unifyBackend(const ast::Term::Pointer& first, const ast::Term::Pointer& second);
 
         std::unique_ptr<ast::Term> first;
         std::unique_ptr<ast::Term> second;

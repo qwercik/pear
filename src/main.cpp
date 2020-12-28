@@ -28,6 +28,6 @@ int main(int argc, char *argv[]) {
     auto ast = parser.run();
 
     pear::pearlog::Interpreter interpreter;
-    interpreter.execute(std::move(ast));
+    interpreter.execute(ast);
 }
 

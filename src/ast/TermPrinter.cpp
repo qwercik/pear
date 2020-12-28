@@ -3,12 +3,12 @@
 #include <pear/ast/TermPrinter.hpp>
 
 namespace pear::ast {
-    TermPrinter::TermPrinter(const Term *term) :
+    TermPrinter::TermPrinter(const Term::Pointer& term) :
         term(term)
     {
     }
 
-    void TermPrinter::print(std::ostream& stream, const Term *term) {
+    void TermPrinter::print(std::ostream& stream, const Term::Pointer& term) {
         if (term->getType() == Term::Type::VARIABLE) {
             stream << term->getLexeme().getContent();
         } else if (term->getType() == Term::Type::LITERAL) {
@@ -16,7 +16,7 @@ namespace pear::ast {
         } else {
             stream << term->getLexeme().getContent() << "(";
 
-            auto children = term->getChildren();
+            auto& children = term->getChildren();
             if (!children.empty()) {
                 auto child = children.begin();
                 TermPrinter::print(stream, *child);

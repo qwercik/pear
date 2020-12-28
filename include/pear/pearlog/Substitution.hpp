@@ -7,14 +7,14 @@
 namespace pear::pearlog {
     class Substitution {
     public:
-        Substitution(const ast::Term *destination, const ast::Term *source);
+        Substitution(const ast::Term::Pointer& destination, const ast::Term::Pointer& source);
         Substitution(const Substitution& substitution);
 
-        void apply(ast::Term *term) const;
-        void apply(Substitution &substitution) const;
+        void apply(ast::Term::Pointer& term) const;
+        void apply(Substitution& substitution) const;
  
-        const ast::Term *getDestination() const;
-        const ast::Term *getSource() const;
+        const ast::Term::Pointer& getDestination() const;
+        const ast::Term::Pointer& getSource() const;
 
     private:
         std::unique_ptr<ast::Term> destination;

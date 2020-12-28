@@ -7,15 +7,14 @@
 #include <pear/pearlog/Unification.hpp>
 
 namespace pear::pearlog {
-    void Interpreter::execute(ast::Term::Pointer&& term) {
-        std::cout << "Początek\n";
+    void Interpreter::execute(const ast::Term::Pointer& term) {
         if (term->getType() != ast::Term::Type::FUNCTION || term->getLexeme().getContent() != "module") {
             throw InterpreterException(
                 "Each program file should be nested in global module() function"
             );
         }
 
-        auto children = term->getChildren();
+        auto& children = term->getChildren();
         if (children.size() != 2) {
             throw InterpreterException(
                 "module should have 2 params"
@@ -25,8 +24,8 @@ namespace pear::pearlog {
         auto firstIt = children.begin();
         auto secondIt = std::next(firstIt);
 
-        auto first = *firstIt;
-        auto second = *secondIt;
+        auto& first = *firstIt;
+        auto& second = *secondIt;
 
         std::cout << "Unifikuję termy: " << ast::TermPrinter(first) << " oraz " << ast::TermPrinter(second) << "\n\n";
 
@@ -40,8 +39,8 @@ namespace pear::pearlog {
         }
  
         for (const auto& subst : res.getSubstitutions()) {
-            auto dst = subst.getDestination();
-            auto src = subst.getSource();
+            auto& dst = subst.getDestination();
+            auto& src = subst.getSource();
 
             std::cout << ast::TermPrinter(dst) << " = " << ast::TermPrinter(src) << '\n';
         }

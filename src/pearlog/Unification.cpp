@@ -9,7 +9,7 @@ namespace pear::pearlog {
     Unification::Result::Result(const Unification::Result& result) :
         error(result.error),
         substitutions(result.substitutions),
-        term(result.term ? std::make_unique<ast::Term>(*result.term) : nullptr) // It may cause memory error (nullptr dereference)
+        term(result.term ? result.term->clone() : nullptr) 
     {
     }
 
@@ -26,11 +26,11 @@ namespace pear::pearlog {
     }
 
 
-    Unification::Unification(ast::Term *first, ast::Term *second) :
-        first(std::make_unique<ast::Term>(*first)),
-        second(std::make_unique<ast::Term>(*second))
+    Unification::Unification(const ast::Term::Pointer& first, const ast::Term::Pointer& second) :
+        first(first->clone()),
+        second(second->clone())
     {
-        unifyBackend(this->first.get(), this->second.get());
+        unifyBackend(this->first, this->second);
         this->result.term = std::move(this->first);
     }
 
@@ -38,12 +38,12 @@ namespace pear::pearlog {
         return this->result;
     }
 
-    void Unification::unifyBackend(ast::Term *first, ast::Term *second) {
+    void Unification::unifyBackend(const ast::Term::Pointer& first, const ast::Term::Pointer& second) {
         if (first->getType() == ast::Term::Type::VARIABLE) {
             if (second->getType() != ast::Term::Type::VARIABLE || *first != *second) {
                 auto substitution = Substitution(first, second);
-                substitution.apply(this->first.get());
-                substitution.apply(this->second.get());
+                substitution.apply(this->first);
+                substitution.apply(this->second);
 
                 for (auto& other : this->result.substitutions) {
                     substitution.apply(other);
