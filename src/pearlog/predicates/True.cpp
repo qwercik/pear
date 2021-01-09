@@ -4,13 +4,7 @@
 #include <pear/pearlog/predicates/True.hpp>
 
 namespace pear::pearlog::predicates {
-    bool True::unify(const ast::Term::Pointer& term) const {
-        return term->getType() == ast::Term::Type::FUNCTION
-            && term->getChildren().empty()
-            && term->getLexeme().getContent() == "true";
-    }
-
-    bool True::execute(const ast::Term::Pointer& term) const {
+    bool True::execute(const ast::Term::Pointer& term, std::list<Substitution>& substitutions) const {
         return true;
     }
 }

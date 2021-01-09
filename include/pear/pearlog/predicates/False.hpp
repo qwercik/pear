@@ -6,7 +6,6 @@
 namespace pear::pearlog::predicates {
     class False : public BuiltinPredicate {
     public:
-        virtual bool unify(const ast::Term::Pointer& term) const override;
-        virtual bool execute(const ast::Term::Pointer& term) const override;
+        virtual bool execute(const ast::Term::Pointer& term, std::list<Substitution>& substitutions) const override;
     };
 }
