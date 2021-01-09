@@ -1,7 +1,7 @@
 #pragma once
 
 #include <pear/ast/Term.hpp>
-#include <pear/pearlog/BuiltinPrediacte.hpp>
+#include <pear/pearlog/BuiltinPredicate.hpp>
 
 namespace pear::pearlog::predicates {
     class Eval : public BuiltinPredicate {

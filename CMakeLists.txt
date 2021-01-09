@@ -40,12 +40,16 @@ add_executable(pear
     include/pear/pearlog/predicates/False.hpp
     include/pear/pearlog/predicates/True.hpp
     include/pear/pearlog/predicates/Eval.hpp
+    include/pear/pearlog/predicates/And.hpp
+    include/pear/pearlog/predicates/Or.hpp
     src/pearlog/predicates/Module.cpp
     src/pearlog/predicates/Call.cpp
     src/pearlog/predicates/Print.cpp
     src/pearlog/predicates/False.cpp
     src/pearlog/predicates/True.cpp
     src/pearlog/predicates/Eval.cpp
+    src/pearlog/predicates/And.cpp
+    src/pearlog/predicates/Or.cpp
 )
 target_include_directories(pear PUBLIC include/)
 

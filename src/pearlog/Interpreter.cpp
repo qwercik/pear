@@ -1,22 +1,22 @@
 #include <pear/pearlog/Interpreter.hpp>
 #include <pear/ast/Term.hpp>
 #include <pear/pearlog/predicates/Module.hpp>
-#include <pear/pearlog/InterpreterException.hpp>
-#include <pear/pearlog/predicates/Module.hpp>
 #include <pear/pearlog/predicates/Call.hpp>
 #include <pear/pearlog/predicates/True.hpp>
 #include <pear/pearlog/predicates/False.hpp>
 #include <pear/pearlog/predicates/Eval.hpp>
-#include <iostream>
-#include <pear/ast/TermPrinter.hpp>
+#include <pear/pearlog/predicates/And.hpp>
+#include <pear/pearlog/predicates/Or.hpp>
 
 namespace pear::pearlog {
     Interpreter::Interpreter() {
+        this->predicatesManager.insertBack(std::make_unique<predicates::And>());
+        this->predicatesManager.insertBack(std::make_unique<predicates::Or>());
+        this->predicatesManager.insertBack(std::make_unique<predicates::Call>());
+        this->predicatesManager.insertBack(std::make_unique<predicates::Eval>());
         this->predicatesManager.insertBack(std::make_unique<predicates::Module>());
-        //this->predicatesManager.insertBack(std::make_unique<predicates::Call>());
         this->predicatesManager.insertBack(std::make_unique<predicates::False>());
         this->predicatesManager.insertBack(std::make_unique<predicates::True>());
-        //this->predicatesManager.insertBack(std::make_unique<predicates::Eval>());
     }
 
     bool Interpreter::execute(const ast::Term::Pointer& term) {

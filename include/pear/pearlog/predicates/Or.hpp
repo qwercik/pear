@@ -5,7 +5,7 @@
 #include <pear/pearlog/Interpreter.hpp>
 
 namespace pear::pearlog::predicates {
-    class Call : public BuiltinPredicate {
+    class Or : public BuiltinPredicate {
     public:
         virtual bool execute(Interpreter& interpreter, const ast::Term::Pointer& term, std::list<Substitution>& substitutions) const override;
     };
