@@ -25,24 +25,21 @@ namespace pear::lexer {
             INVALID
         };
 
-        Token() = default;
-        Token(Type type, const std::string& description, const std::string& pattern);
+        Token(Type type);
+        Token(const Token& token) = default;
 
-        bool match(const std::string& code, std::size_t position, std::string& match) const;
-
-        Type getType() const; 
+        Type getType() const;
         bool isWhitespace() const;
         bool isIdentifier() const;
         bool isLiteral() const;
         bool isScalar() const;
         bool isOperator() const;
 
-        const std::string& getDescription() const;
+        bool operator==(const Token& token) const;
+        bool operator!=(const Token& token) const;
 
     private:
         Type type;
-        std::regex pattern;
-        std::string description;
     };
 }
 

@@ -9,10 +9,10 @@ namespace pear::lexer {
     public:
         Lexeme() = default;
         Lexeme(const Lexeme& lexeme) = default;
-        Lexeme(const Token *token, const std::string& content, LexemePosition position);
+        Lexeme(const Token& token, const std::string& content, LexemePosition position);
         Lexeme& operator=(const Lexeme& lexeme) = default;
 
-        const Token *getToken() const;
+        const Token& getToken() const;
         const std::string& getContent() const;
         const LexemePosition& getPosition() const;
 
@@ -22,7 +22,7 @@ namespace pear::lexer {
         bool operator!=(const Lexeme& lexeme) const;
 
     private:
-        const Token * token = nullptr;
+        Token token;
         std::string content;
         LexemePosition position;
     };

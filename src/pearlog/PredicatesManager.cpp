@@ -13,9 +13,9 @@ namespace pear::pearlog {
 
     void PredicatesManager::forEachMatching(const ast::Term::Pointer& term, std::function<void(const Predicate::Pointer& predicate)> callback) const {
         for (const auto& predicate : this->predicates) {
-            if (predicate->unify(term)) {
+            /*if (predicate->unify(term)) {
                 callback(predicate);
-            }
+            }*/
         }
     }
 

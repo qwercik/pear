@@ -11,18 +11,17 @@ namespace pear::lexer {
 
     private:
         // The priority is important!
-        // TODO: optimize it to be most efficient
-        std::list<Token> tokens = {
-            Token(Token::Type::NEWLINE, "new line", "\\n"),
-            Token(Token::Type::WHITESPACE, "whitespace", "\\s+"),
-            Token(Token::Type::LEFT_PARENTHESIS, "left parenthesis", "\\("),
-            Token(Token::Type::RIGHT_PARENTHESIS, "right parenthesis", "\\)"),
-            Token(Token::Type::COMMA, "comma", ","),
-            Token(Token::Type::STRING, "string", "\'[^\']*\'"),
-            Token(Token::Type::FLOAT, "float", "[-+]?(?:[1-9][0-9]*|0)\\.[0-9]+"),
-            Token(Token::Type::DECIMAL_INTEGER, "decimal integer", "[-+]?(?:[1-9][0-9]*|0)"),
-            Token(Token::Type::IDENTIFIER, "identifier", "[a-zA-Z_][0-9a-zA-Z_]*"),
-            Token(Token::Type::INVALID, "invalid", ".{1,10}")
+        const std::list<std::pair<Token::Type, std::string>> tokensRegexes = {
+                {Token::Type::NEWLINE, "\\n"},
+                {Token::Type::WHITESPACE, "\\s+"},
+                {Token::Type::LEFT_PARENTHESIS, "\\("},
+                {Token::Type::RIGHT_PARENTHESIS, "\\)"},
+                {Token::Type::COMMA, ","},
+                {Token::Type::STRING, R"('[^']*')"},
+                {Token::Type::FLOAT, "[-+]?(?:[1-9][0-9]*|0)\\.[0-9]+"},
+                {Token::Type::DECIMAL_INTEGER, "[-+]?(?:[1-9][0-9]*|0)"},
+                {Token::Type::IDENTIFIER, "[a-zA-Z_][0-9a-zA-Z_]*"},
+                {Token::Type::INVALID, ".{1,10}"}
         };
     };
 }

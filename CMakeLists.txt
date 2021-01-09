@@ -8,10 +8,12 @@ add_executable(pear
     include/pear/lexer/LexerException.hpp
     include/pear/lexer/Token.hpp
     include/pear/lexer/Lexeme.hpp
+    include/pear/lexer/LexemePrinter.hpp
     include/pear/lexer/LexemePosition.hpp
     src/lexer/Lexer.cpp
     src/lexer/Token.cpp
     src/lexer/Lexeme.cpp
+    src/lexer/LexemePrinter.cpp
     src/lexer/LexemePosition.cpp
 
     include/pear/ast/Term.hpp

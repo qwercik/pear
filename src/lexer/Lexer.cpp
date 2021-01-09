@@ -14,14 +14,15 @@ namespace pear::lexer {
         LexemePosition position;
 
         while (position.getOffset() < code.size()) {
-            for (const auto& token : this->tokens) {
-                std::string match;
-                if (token.match(code, position.getOffset(), match)) {
-                    if (token.getType() == Token::Type::INVALID) {
-                        throw LexerException("Invalid token starting with \'" + match + "\'");
+            for (const auto& [tokenType, pattern] : this->tokensRegexes) {
+                std::regex regex("^" + pattern);
+                std::smatch match;
+                if (std::regex_search(code.begin() + position.getOffset(), code.end(), match, regex)) {
+                    if (tokenType == Token::Type::INVALID) {
+                        throw LexerException("Invalid token starting with \'" + match.str() + "\'");
                     }
 
-                    auto lexeme = Lexeme(&token, match, position);
+                    auto lexeme = Lexeme(Token(tokenType), match.str(), position);
                     lexeme.updateGlobalLexerPosition(position);
                     lexemes.push_back(lexeme);
                     break;

@@ -11,11 +11,11 @@ namespace pear::ast {
     {
     }
 
-    Term::Term(const Term& term) {
-        this->type = term.type;
-        this->lexeme = term.lexeme;
-        this->parent = nullptr;
-
+    Term::Term(const Term& term) :
+        type(term.type),
+        lexeme(term.lexeme),
+        parent(nullptr)
+    {
         for (const auto& child : term.children) {
             this->addNextChild(std::make_unique<Term>(*child));
         }
