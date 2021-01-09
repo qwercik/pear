@@ -10,7 +10,8 @@ namespace pear::pearlog::predicates {
         }
 
         for (auto& child : term->getChildren()) {
-            if (!interpreter.execute(child, substitutions)) {
+            auto iterator = interpreter.getPredicatesManager().getStart();
+            if (!interpreter.execute(iterator, child, substitutions)) {
                 return false;
             }
         }

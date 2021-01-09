@@ -14,7 +14,17 @@ namespace pear::pearlog::predicates {
                 moduleEntry->getLexeme().getContent() == "query" &&
                 moduleEntry->getChildren().size() == 1) {
                 auto& executable = moduleEntry->getChildren().front();
-                std::cout << ast::TermPrinter(executable) << ": " << interpreter.execute(executable, substitutions) << "\n";
+                std::cout << "query " << ast::TermPrinter(executable) << ":\n";
+
+                auto iterator = interpreter.getPredicatesManager().getStart();
+                while (true) {
+                    bool result = interpreter.execute(iterator, executable, substitutions);
+                    std::cout << "result: " << result << "\n";
+
+                    if (result) {
+                        break;
+                    }
+                }
             }
         }
 

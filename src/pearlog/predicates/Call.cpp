@@ -10,6 +10,7 @@ namespace pear::pearlog::predicates {
         }
 
         auto& executable = term->getChildren().front();
-        return interpreter.execute(executable, substitutions);
+        auto iterator = interpreter.getPredicatesManager().getStart();
+        return interpreter.execute(iterator, executable, substitutions);
     }
 }

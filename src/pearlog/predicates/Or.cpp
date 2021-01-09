@@ -10,8 +10,9 @@ namespace pear::pearlog::predicates {
 
         auto result = false;
         for (auto& child : term->getChildren()) {
+            auto iterator = interpreter.getPredicatesManager().getStart();
             std::list<Substitution> substitutionsCopy = substitutions;
-            if (interpreter.execute(child, substitutionsCopy)) {
+            if (interpreter.execute(iterator, child, substitutionsCopy)) {
                 result = true;
             }
         }

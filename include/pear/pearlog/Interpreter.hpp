@@ -10,8 +10,9 @@ namespace pear::pearlog {
         Interpreter();
 
         virtual bool execute(const ast::Term::Pointer& term) override;
-        bool execute(const ast::Term::Pointer& term, std::list<Substitution>& substitutions);
+        bool execute(PredicatesManager::Iterator& iterator, const ast::Term::Pointer& term, std::list<Substitution>& substitutions);
 
+        PredicatesManager& getPredicatesManager();
     private:
         PredicatesManager predicatesManager;
     };
