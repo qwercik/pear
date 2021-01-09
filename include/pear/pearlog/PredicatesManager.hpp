@@ -5,15 +5,21 @@
 #include <pear/pearlog/Predicate.hpp>
 
 namespace pear::pearlog {
+    class Interpreter;
+
     class PredicatesManager {
     public:
         using Container = std::list<Predicate::Pointer>;
-        using Iterator = Container::iterator;
+        using Iterator = Container::const_iterator;
 
         void insertFront(Predicate::Pointer&& predicate);
         void insertBack(Predicate::Pointer&& predicate);
 
-        void forEachMatching(const ast::Term::Pointer& term, std::function<void(const Predicate::Pointer& predicate)> callback) const;
+        Iterator getStart();
+        Iterator getEnd();
+        bool isEnd(const Iterator& iterator);
+
+        bool executeNext(Iterator& iterator, Interpreter& interpreter, const ast::Term::Pointer& term, std::list<Substitution>& substitutionsList) const;
 
     private:
         void insert(Iterator iterator, Predicate::Pointer&& predicate);

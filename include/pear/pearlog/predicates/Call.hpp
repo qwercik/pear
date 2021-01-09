@@ -2,9 +2,10 @@
 
 #include <pear/ast/Term.hpp>
 #include <pear/pearlog/BuiltinPrediacte.hpp>
+#include <pear/pearlog/Interpreter.hpp>
 
 namespace pear::pearlog::predicates {
-    class Eval : public BuiltinPredicate {
+    class Call : public BuiltinPredicate {
     public:
         virtual bool execute(Interpreter& interpreter, const ast::Term::Pointer& term, std::list<Substitution>& substitutions) const override;
     };

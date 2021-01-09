@@ -4,7 +4,7 @@
 #include <pear/pearlog/predicates/Print.hpp>
 
 namespace pear::pearlog::predicates {
-    bool Print::execute(const ast::Term::Pointer& term, std::list<Substitution>& substitutions) const {
+    bool Print::execute(Interpreter& interpreter, const ast::Term::Pointer& term, std::list<Substitution>& substitutions) const {
         if (term->getType() != ast::Term::Type::FUNCTION || term->getLexeme().getContent() != "print") {
             return false;
         }

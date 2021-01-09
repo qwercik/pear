@@ -2,6 +2,12 @@
 #include <pear/lexer/LexemePosition.hpp>
 
 namespace pear::lexer {
+    Lexeme::Lexeme(const Token& token, const std::string& content) :
+        token(token),
+        content(content)
+    {
+    }
+
     Lexeme::Lexeme(const Token& token, const std::string& content, LexemePosition position) :
         token(token),
         content(content),

@@ -1,6 +1,7 @@
 #include <pear/ast/Term.hpp>
 #include <pear/pearlog/Predicate.hpp>
 #include <pear/pearlog/PredicatesManager.hpp>
+#include <iostream>
 
 namespace pear::pearlog {
     void PredicatesManager::insertFront(Predicate::Pointer&& predicate) {
@@ -11,12 +12,29 @@ namespace pear::pearlog {
         this->insert(this->predicates.end(), std::move(predicate));
     }
 
-    void PredicatesManager::forEachMatching(const ast::Term::Pointer& term, std::function<void(const Predicate::Pointer& predicate)> callback) const {
-        for (const auto& predicate : this->predicates) {
-            /*if (predicate->unify(term)) {
-                callback(predicate);
-            }*/
+    bool PredicatesManager::executeNext(Iterator& iterator, Interpreter& interpreter, const ast::Term::Pointer& term, std::list<Substitution>& substitutionsList) const {
+        for (; iterator != this->predicates.end(); iterator++) {
+            auto& predicate = *iterator;
+
+            if (predicate->execute(interpreter, term, substitutionsList)) {
+                iterator++;
+                return true;
+            }
         }
+
+        return false;
+    }
+
+    PredicatesManager::Iterator PredicatesManager::getStart() {
+        return this->predicates.begin();
+    }
+
+    PredicatesManager::Iterator PredicatesManager::getEnd() {
+        return this->predicates.end();
+    }
+
+    bool PredicatesManager::isEnd(const Iterator& iterator) {
+        return iterator == this->predicates.end();
     }
 
     void PredicatesManager::insert(Iterator iterator, Predicate::Pointer&& predicate) {

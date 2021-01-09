@@ -7,8 +7,8 @@
 namespace pear::lexer {
     class Lexeme {
     public:
-        Lexeme() = default;
         Lexeme(const Lexeme& lexeme) = default;
+        Lexeme(const Token& token, const std::string& content);
         Lexeme(const Token& token, const std::string& content, LexemePosition position);
         Lexeme& operator=(const Lexeme& lexeme) = default;
 

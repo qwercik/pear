@@ -1,10 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <pear/lexer/Lexer.hpp>
-#include <pear/ast/TermPrinter.hpp>
 #include <pear/parser/Parser.hpp>
 #include <pear/pearlog/Interpreter.hpp>
-#include <pear/lexer/LexemePrinter.hpp>
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -24,9 +22,6 @@ int main(int argc, char *argv[]) {
 
     pear::lexer::Lexer lexer;
     auto lexemes = lexer.run(code);
-    for (const auto& lexeme : lexemes) {
-        std::cout << pear::lexer::LexemePrinter(lexeme) << '\n';
-    }
 
     pear::parser::Parser parser(lexemes);
     auto ast = parser.run();

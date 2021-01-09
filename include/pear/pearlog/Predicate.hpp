@@ -5,10 +5,12 @@
 #include <pear/pearlog/Substitution.hpp>
 
 namespace pear::pearlog {
+    class Interpreter;
+
     class Predicate {
     public:
         using Pointer = std::unique_ptr<Predicate>;
 
-        virtual bool execute(const ast::Term::Pointer& term, std::list<Substitution>& substitutions) const = 0;
+        virtual bool execute(Interpreter& interpreter, const ast::Term::Pointer& term, std::list<Substitution>& substitutions) const = 0;
     };
 }
