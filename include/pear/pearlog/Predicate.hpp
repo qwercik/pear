@@ -2,10 +2,11 @@
 
 #include <memory>
 #include <pear/ast/Term.hpp>
+#include <pear/pearlog/Substitution.hpp>
 
 namespace pear::pearlog {
     class Interpreter;
-    class Substitution;
+
 
     class Predicate {
     public:
@@ -14,8 +15,9 @@ namespace pear::pearlog {
         public:
             virtual bool next() = 0;
             const std::list<Substitution>& getSubstitutions() const;
+            std::list<Substitution>& getSubstitutions();
 
-        private:
+        protected:
             std::list<Substitution> substitutions;
         };
 

@@ -16,12 +16,13 @@ namespace pear::pearlog::predicates {
         private:
             Interpreter& interpreter;
             const ast::Term::Pointer& child;
+            std::unique_ptr<Predicate::Instance> childInstance;
             PredicatesManager::ConstIterator iterator;
-            bool predicateInitialized;
         };
 
         explicit Call(Interpreter& interpreter);
 
+        std::unique_ptr<Predicate::Instance> createCaller(const ast::Term::Pointer& term) const;
         std::unique_ptr<Predicate::Instance> createInstanceBackend(const ast::Term::Pointer& term) const override;
         bool unify(const ast::Term::Pointer& term) const override;
     };

@@ -15,13 +15,9 @@ namespace pear::pearlog::predicates {
 
         private:
             Interpreter& interpreter;
-
-            std::stack<PredicatesManager::ConstIterator> iterators;
-            std::stack<std::list<Substitution>> substitutions;
-            std::stack<ast::Term::Pointer> terms;
-            std::stack<bool> predicateInitialized;
-
-            std::size_t childrenNumber = 0;
+            const ast::Term::Pointer& term;
+            ast::Term::List::const_iterator currentChild;
+            std::stack<std::unique_ptr<Predicate::Instance>> childInstances;
         };
 
         explicit And(Interpreter& interpreter);

@@ -3,51 +3,38 @@
 #include <pear/pearlog/UnificationException.hpp>
 #include <pear/pearlog/Interpreter.hpp>
 #include <pear/pearlog/Unification.hpp>
+#include <pear/pearlog/predicates/Call.hpp>
 
 namespace pear::pearlog {
-    RuntimeDefinedPredicate::RuntimeDefinedPredicate(const ast::Term& definition) {
-        const auto& iterator = definition.getChildren().begin();
-        this->header = (*iterator)->clone();
-        this->body = (*std::next(iterator))->clone();
+    RuntimeDefinedPredicate::Instance::Instance(Interpreter& interpreter, const ast::Term::Pointer& header, const ast::Term::Pointer& body, const ast::Term::Pointer& term) :
+        interpreter(interpreter),
+        header(header),
+        body(body),
+        term(term->clone()),
+        scopeId( interpreter.getInstances().size())
+    {
+        toggleVariablesScopeId(this->term, scopeId);
+
+        auto substitutions = SideUnification(this->header, this->term).getResult().getSubstitutions();
+        this->caller = predicates::Call(interpreter).createCaller(this->term);
+        this->caller->getSubstitutions().insert(caller->getSubstitutions().begin(), substitutions.begin(), substitutions.end());
     }
 
-    bool RuntimeDefinedPredicate::unify(const ast::Term::Pointer& pointer) const {
+    bool RuntimeDefinedPredicate::Instance::next() {
         try {
-            Unification unification(this->header, pointer);
-            return true;
-        } catch (const UnificationException& e) {
-            return false;
-        }
-    }
-
-    bool RuntimeDefinedPredicate::execute(Interpreter& interpreter, const ast::Term::Pointer& term) const {
-        try {
-            int scopeId = interpreter.getScopeId();
-
-            auto termCopy = term->clone();
-            toggleVariablesScopeId(termCopy, scopeId);
-
-            interpreter.getSubstitutions().push(SideUnification(this->header, termCopy).getResult().getSubstitutions());
-            interpreter.getIterators().push(interpreter.getPredicatesManager().getContainer().begin());
-
-            auto result = interpreter.executeNext(termCopy);
-
+            auto result = this->caller->next();
             auto headerCopy = this->header->clone();
-            for (const auto& substitution : interpreter.getSubstitutions().top()) {
+            for (const auto& substitution : this->caller->getSubstitutions()) {
                 substitution.apply(headerCopy);
             }
 
-            interpreter.getSubstitutions().pop();
-            interpreter.getIterators().pop();
-
-            auto resultSubstitutions = SideUnification(termCopy, headerCopy).getResult().getSubstitutions();
+            auto resultSubstitutions = SideUnification(this->term, headerCopy).getResult().getSubstitutions();
             for (auto& substitution : resultSubstitutions) {
                 toggleVariablesScopeId(substitution.getDestination(), scopeId);
                 toggleVariablesScopeId(substitution.getSource(), scopeId);
             }
 
-            auto& scope = interpreter.getSubstitutions().top();
-            scope.insert(scope.begin(), resultSubstitutions.begin(), resultSubstitutions.end());
+            this->substitutions.insert(this->substitutions.begin(), resultSubstitutions.begin(), resultSubstitutions.end());
 
             return result;
         } catch (const UnificationException& e) {
@@ -55,7 +42,7 @@ namespace pear::pearlog {
         }
     }
 
-    void RuntimeDefinedPredicate::toggleVariablesScopeId(ast::Term::Pointer& pointer, int currentScopeId) const {
+    void RuntimeDefinedPredicate::Instance::toggleVariablesScopeId(ast::Term::Pointer& pointer, int currentScopeId) const {
         if (pointer->getType() == ast::Term::Type::VARIABLE) {
             if (pointer->getScopeId() == -1) {
                 pointer->setScopeId(currentScopeId);
@@ -67,5 +54,25 @@ namespace pear::pearlog {
                 this->toggleVariablesScopeId(child, currentScopeId);
             }
         }
+    }
+
+    std::unique_ptr<Predicate::Instance> RuntimeDefinedPredicate::createInstanceBackend(const ast::Term::Pointer& term) const {
+        return std::make_unique<RuntimeDefinedPredicate::Instance>(this->interpreter, header, body, term);
+    }
+
+    bool RuntimeDefinedPredicate::unify(const ast::Term::Pointer& term) const {
+        try {
+            Unification unification(this->header, term);
+            return true;
+        } catch (const UnificationException& e) {
+            return false;
+        }
+    }
+
+    RuntimeDefinedPredicate::RuntimeDefinedPredicate(Interpreter& interpreter, const ast::Term::Pointer &definition) :
+        Predicate(interpreter),
+        header(*definition->getChildren().begin()),
+        body(*std::next(definition->getChildren().begin()))
+    {
     }
 }

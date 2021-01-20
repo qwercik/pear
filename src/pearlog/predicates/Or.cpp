@@ -1,5 +1,8 @@
 #include <pear/ast/Term.hpp>
+#include <pear/ast/Function.hpp>
 #include <pear/pearlog/predicates/Or.hpp>
+#include <pear/pearlog/predicates/Call.hpp>
+
 
 namespace pear::pearlog::predicates {
     Or::Or(Interpreter& interpreter) :
@@ -18,33 +21,22 @@ namespace pear::pearlog::predicates {
 
     Or::Instance::Instance(Interpreter& interpreter, const ast::Term::Pointer& term) :
         interpreter(interpreter),
-        term(term->clone())
+        term(term),
+        iterator(term->getChildren().cbegin())
     {
-        this->currentChild = 0;
-        this->childrenNumber = term->getChildren().size();
-        this->iterator = interpreter.getPredicatesManager().getContainer().begin();
-        this->predicateInitialized = false;
     }
 
     bool Or::Instance::next() {
-        while (this->currentChild < this->childrenNumber) {
-            auto end = this->interpreter.getPredicatesManager().getContainer().end();
-            for (; this->iterator != end; this->iterator++) {
-                auto& predicate = *this->iterator;
-
-                if (!this->predicateInitialized) {
-                    if (!predicate->unify(this->term)) {
-                        continue;
-                    }
-
-                    predicate->in(*this->interpreter, this->term);
-                    this->predicateInitialized = true;
-                }
-
-                if (predicate->next()) {
-                    return true;
-                }
+        for (; this->iterator != term->getChildren().cend(); this->iterator++) {
+            if (!this->childInstance) {
+                this->childInstance = predicates::Call(this->interpreter).createCaller(*this->iterator);
             }
+
+            if (this->childInstance->next()) {
+                return true;
+            }
+
+            this->childInstance.reset(nullptr);
         }
 
         return false;

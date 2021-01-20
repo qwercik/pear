@@ -22,10 +22,7 @@ namespace pear::pearlog {
     }
 
     void Interpreter::execute(const ast::Term::Pointer& term) {
-        auto function = std::make_unique<ast::Function>(lexer::Lexeme(lexer::Token::Type::IDENTIFIER, "call"));
-        function->getChildren().push_back(term);
-
-        auto instance = predicates::Call(*this).createInstance(*this, std::move(function));
+        auto instance = predicates::Call(*this).createCaller(term);
         instance->next();
     }
 

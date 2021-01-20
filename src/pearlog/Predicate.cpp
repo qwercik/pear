@@ -10,7 +10,11 @@ namespace pear::pearlog {
         return this->substitutions;
     }
 
-    std::unique_ptr<Instance> Predicate::createInstance(const ast::Term::Pointer& term) const {
-        this->createInstanceBackend(term);
+    std::list<Substitution>& Predicate::Instance::getSubstitutions() {
+        return this->substitutions;
+    }
+
+    std::unique_ptr<Predicate::Instance> Predicate::createInstance(const ast::Term::Pointer& term) const {
+        return this->createInstanceBackend(term);
     }
 }

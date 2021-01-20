@@ -7,17 +7,30 @@
 namespace pear::pearlog {
     class RuntimeDefinedPredicate : public Predicate {
     public:
-        explicit RuntimeDefinedPredicate(const ast::Term& definition);
+        class Instance : public Predicate::Instance {
+        public:
+            Instance(Interpreter& interpreter, const ast::Term::Pointer& header, const ast::Term::Pointer& body, const ast::Term::Pointer& term);
+            bool next() override;
 
-        bool unify(const ast::Term::Pointer& pointer) const override;
-        bool in(Interpreter& context, const ast::Term::Pointer& term) const override;
-        bool next(Interpreter& context, const ast::Term::Pointer& term) const override;
-        bool out(Interpreter& context, const ast::Term::Pointer& term) const override;
+        private:
+            void toggleVariablesScopeId(ast::Term::Pointer& pointer, int currentScopeId) const;
+
+            Interpreter& interpreter;
+            const ast::Term::Pointer& header;
+            const ast::Term::Pointer& body;
+            ast::Term::Pointer term;
+            int scopeId;
+
+            std::unique_ptr<Predicate::Instance> caller;
+        };
+
+        explicit RuntimeDefinedPredicate(Interpreter& interpreter, const ast::Term::Pointer & definition);
+
+        std::unique_ptr<Predicate::Instance> createInstanceBackend(const ast::Term::Pointer& term) const override;
+        bool unify(const ast::Term::Pointer& term) const override;
 
     private:
-        void toggleVariablesScopeId(ast::Term::Pointer& pointer, int currentScopeId) const;
-
-        ast::Term::Pointer header;
-        ast::Term::Pointer body;
+        const ast::Term::Pointer& header;
+        const ast::Term::Pointer& body;
     };
 }
