@@ -4,37 +4,16 @@
 #include <iostream>
 
 namespace pear::pearlog {
-    void PredicatesManager::insertFront(Predicate::Pointer&& predicate) {
-        this->insert(this->predicates.begin(), std::move(predicate));
-    }
-
     void PredicatesManager::insertBack(Predicate::Pointer&& predicate) {
         this->insert(this->predicates.end(), std::move(predicate));
     }
 
-    bool PredicatesManager::executeNext(Iterator& iterator, Interpreter& interpreter, const ast::Term::Pointer& term, std::list<Substitution>& substitutionsList) const {
-        for (; iterator != this->predicates.end(); iterator++) {
-            auto& predicate = *iterator;
-
-            if (predicate->execute(interpreter, term, substitutionsList)) {
-                iterator++;
-                return true;
-            }
-        }
-
-        return false;
+    void PredicatesManager::insertFront(Predicate::Pointer&& predicate) {
+        this->insert(this->predicates.begin(), std::move(predicate));
     }
 
-    PredicatesManager::Iterator PredicatesManager::getStart() {
-        return this->predicates.begin();
-    }
-
-    PredicatesManager::Iterator PredicatesManager::getEnd() {
-        return this->predicates.end();
-    }
-
-    bool PredicatesManager::isEnd(const Iterator& iterator) {
-        return iterator == this->predicates.end();
+    const PredicatesManager::Container& PredicatesManager::getContainer() {
+        return this->predicates;
     }
 
     void PredicatesManager::insert(Iterator iterator, Predicate::Pointer&& predicate) {

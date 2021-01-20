@@ -5,8 +5,22 @@
 #include <pear/pearlog/Interpreter.hpp>
 
 namespace pear::pearlog::predicates {
-    class Or : public BuiltinPredicate {
+    class Or : public RuntimeDefinedPredicate {
     public:
-        virtual bool execute(Interpreter& interpreter, const ast::Term::Pointer& term, std::list<Substitution>& substitutions) const override;
+        bool unify(const ast::Term::Pointer& term) const override;
+
+        void in(Interpreter& interpreter, const ast::Term::Pointer& term) override;
+        bool next() override;
+        void out() override;
+
+    private:
+        Interpreter *interpreter = nullptr;
+
+        ast::Term::Pointer term;
+        PredicatesManager::ConstIterator iterator;
+        bool predicateInitialized = false;
+
+        std::size_t childrenNumber = 0;
+        std::size_t currentChild = 0;
     };
 }

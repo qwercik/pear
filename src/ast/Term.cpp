@@ -21,6 +21,9 @@ namespace pear::ast {
         }
     }
 
+    void Term::setScopeId(int scopeId) {
+        this->scopeId = scopeId;
+    }
 
     void Term::addNextChild(Term::Pointer&& term) {
         this->insertChild(this->children.end(), std::move(term));
@@ -56,6 +59,10 @@ namespace pear::ast {
 
     Term::Type Term::getType() const {
         return this->type;
+    }
+
+    int Term::getScopeId() const {
+        return this->scopeId;
     }
 
     const lexer::Lexeme& Term::getLexeme() const {

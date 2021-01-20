@@ -5,8 +5,12 @@
 #include <pear/pearlog/Interpreter.hpp>
 
 namespace pear::pearlog::predicates {
-    class Print : public BuiltinPredicate {
+    class Print : public RuntimeDefinedPredicate {
     public:
-        virtual bool execute(Interpreter& interpreter, const ast::Term::Pointer& term, std::list<Substitution>& substitutions) const override;
+        bool unify(const ast::Term::Pointer& term) const override;
+
+        void in(Interpreter& interpreter, const ast::Term::Pointer& term) override;
+        bool next() override;
+        void out() override;
     };
 }

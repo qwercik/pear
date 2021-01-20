@@ -28,11 +28,16 @@ add_executable(pear
     include/pear/pearlog/Interpreter.hpp
     include/pear/pearlog/Substitution.hpp
     include/pear/pearlog/Unification.hpp
+    include/pear/pearlog/SideUnification.hpp
     include/pear/pearlog/PredicatesManager.hpp
+    include/pear/pearlog/BuiltinPredicate.hpp
+    include/pear/pearlog/RuntimeDefinedPredicate.hpp
     src/pearlog/Interpreter.cpp
     src/pearlog/Substitution.cpp
     src/pearlog/Unification.cpp
+    src/pearlog/SideUnification.cpp
     src/pearlog/PredicatesManager.cpp
+    src/pearlog/RuntimeDefinedPredicate.cpp
 
     include/pear/pearlog/predicates/Module.hpp
     include/pear/pearlog/predicates/Call.hpp

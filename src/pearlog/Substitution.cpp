@@ -33,11 +33,11 @@ namespace pear::pearlog {
         this->apply(substitution.source);
     }
 
-    const ast::Term::Pointer& Substitution::getDestination() const {
+    ast::Term::Pointer& Substitution::getDestination() {
         return this->destination;
     }
 
-    const ast::Term::Pointer& Substitution::getSource() const {
+    ast::Term::Pointer& Substitution::getSource() {
         return this->source;
     }
 }

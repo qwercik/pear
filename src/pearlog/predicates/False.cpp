@@ -3,7 +3,13 @@
 #include <iostream>
 
 namespace pear::pearlog::predicates {
-    bool False::execute(Interpreter& interpreter, const ast::Term::Pointer& term, std::list<Substitution>& substitutions) const {
+    bool False::unify(const ast::Term::Pointer& term) const {
+        return term->getType() == ast::Term::Type::FUNCTION &&
+            term->getLexeme().getContent() == "false" &&
+            term->getChildren().empty();
+    }
+
+    bool False::execute(Interpreter& interpreter, const ast::Term::Pointer& term) const {
         return false;
     }
 }

@@ -20,6 +20,7 @@ namespace pear::ast {
         Term(Type type, const lexer::Lexeme& lexeme);
         Term(const Term& term);
 
+        void setScopeId(int scopeId);
         void addNextChild(Pointer&& term);
         void replaceChild(Iterator iterator, Pointer&& term);
         void insertChild(Iterator iterator, Pointer&& term);
@@ -29,6 +30,7 @@ namespace pear::ast {
         Term *getParent();
 
         Type getType() const;
+        int getScopeId() const;
         const lexer::Lexeme& getLexeme() const;
         const List& getChildren() const;
         List& getChildren();
@@ -41,6 +43,12 @@ namespace pear::ast {
 
     private:
         Type type;
+
+        // It will be used by interpreter part
+        // -1 mean that scopeId doesn't matter
+        // non-negative value represents scope id
+        int scopeId = -1;
+
         lexer::Lexeme lexeme;
         std::list<Pointer> children;
         Term *parent = nullptr;
