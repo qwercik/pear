@@ -5,12 +5,20 @@
 #include <pear/pearlog/Interpreter.hpp>
 
 namespace pear::pearlog::predicates {
-    class Print : public RuntimeDefinedPredicate {
+    class Print : public BuiltinPredicate {
     public:
-        bool unify(const ast::Term::Pointer& term) const override;
+        class Instance : public BuiltinPredicate::Instance {
+        public:
+            Instance(const ast::Term::Pointer& term);
+            bool next() override;
 
-        void in(Interpreter& interpreter, const ast::Term::Pointer& term) override;
-        bool next() override;
-        void out() override;
+        private:
+            const ast::Term::Pointer& term;
+            bool alreadyCalled = false;
+        };
+
+        explicit Print(Interpreter& interpreter);
+        std::unique_ptr<Predicate::Instance> createInstanceBackend(const ast::Term::Pointer& term) const override;
+        bool unify(const ast::Term::Pointer& term) const override;
     };
 }

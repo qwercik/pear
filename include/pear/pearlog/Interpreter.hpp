@@ -13,22 +13,11 @@ namespace pear::pearlog {
         Interpreter();
         void execute(const ast::Term::Pointer& term);
 
-        void call(const ast::Term::Pointer& term);
-        bool next();
-        void back();
-
-        void updateScopeId(int diff);
-
         PredicatesManager& getPredicatesManager();
-        std::stack<std::list<Substitution>>& getSubstitutions();
-        std::stack<PredicatesManager::ConstIterator>& getIterators();
-        int getScopeId() const;
+        std::stack<Predicate::Instance>& getInstances();
 
     private:
         PredicatesManager predicatesManager;
-        std::stack<std::list<Substitution>> substitutions;
-        std::stack<PredicatesManager::ConstIterator> iterators;
-        std::stack<ast::Term::Pointer> terms;
-        int currentScopeId = 0;
+        std::stack<Predicate::Instance> instances;
     };
 };

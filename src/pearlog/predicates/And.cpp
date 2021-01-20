@@ -1,13 +1,24 @@
 #include <pear/ast/Term.hpp>
+#include <pear/pearlog/Predicate.hpp>
 #include <pear/pearlog/predicates/And.hpp>
 
 namespace pear::pearlog::predicates {
+    And::And(Interpreter& interpreter) :
+        BuiltinPredicate(interpreter)
+    {
+    }
+
     bool And::unify(const ast::Term::Pointer& term) const {
         return term->getType() == ast::Term::Type::FUNCTION && term->getLexeme().getContent() == "and";
     }
 
-    void And::in(Interpreter& interpreter, const ast::Term::Pointer& term) {
-        this->interpreter = &interpreter;
+    std::unique_ptr<Predicate::Instance> And::createInstanceBackend(const ast::Term::Pointer& term) const {
+        return std::make_unique<And::Instance>(this->interpreter, term);
+    }
+
+    And::Instance::Instance(Interpreter& interpreter, const ast::Term::Pointer& term) :
+        interpreter(interpreter)
+    {
         this->childrenNumber = term->getChildren().size();
 
         this->iterators.push(interpreter.getPredicatesManager().getContainer().begin());
@@ -21,9 +32,9 @@ namespace pear::pearlog::predicates {
         this->terms.push(termCopy);
     }
 
-    // TODO: nie trzeba będzie tu czasami inkrementować iteratora?!
-    bool And::next() {
-        auto end = this->interpreter->getPredicatesManager().getContainer().end();
+    bool And::Instance::next() {
+        // TODO: nie trzeba będzie tu czasami inkrementować iteratora?!
+        auto end = this->interpreter.getPredicatesManager().getContainer().end();
 
         while (!this->iterators.empty()) {
             auto& iterator = this->iterators.top();
@@ -43,7 +54,7 @@ namespace pear::pearlog::predicates {
 
                 if (predicate->next()) {
                     if (this->iterators.size() < this->childrenNumber) {
-                        this->iterators.push(this->interpreter->getPredicatesManager().getContainer().begin());
+                        this->iterators.push(this->interpreter.getPredicatesManager().getContainer().begin());
                         this->substitutions.push(this->substitutions.top());
                         this->predicateInitialized.push(false);
 

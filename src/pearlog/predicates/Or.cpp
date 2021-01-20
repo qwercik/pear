@@ -2,24 +2,33 @@
 #include <pear/pearlog/predicates/Or.hpp>
 
 namespace pear::pearlog::predicates {
-    bool Or::unify(const ast::Term::Pointer& term) const {
-        return term->getType() == ast::Term::Type::FUNCTION &&
-            term->getLexeme().getContent() == "or";
+    Or::Or(Interpreter& interpreter) :
+            BuiltinPredicate(interpreter)
+    {
     }
 
-    void Or::in(Interpreter& interpreter, const ast::Term::Pointer& term) {
-        this->interpreter = &interpreter;
+    bool Or::unify(const ast::Term::Pointer& term) const {
+        return term->getType() == ast::Term::Type::FUNCTION &&
+               term->getLexeme().getContent() == "or";
+    }
 
+    std::unique_ptr<Predicate::Instance> Or::createInstanceBackend(const ast::Term::Pointer& term) const {
+        return std::make_unique<Or::Instance>(this->interpreter, term);
+    }
+
+    Or::Instance::Instance(Interpreter& interpreter, const ast::Term::Pointer& term) :
+        interpreter(interpreter),
+        term(term->clone())
+    {
         this->currentChild = 0;
         this->childrenNumber = term->getChildren().size();
-        this->term = term->clone();
         this->iterator = interpreter.getPredicatesManager().getContainer().begin();
         this->predicateInitialized = false;
     }
 
-    bool Or::next() {
+    bool Or::Instance::next() {
         while (this->currentChild < this->childrenNumber) {
-            auto end = this->interpreter->getPredicatesManager().getContainer().end();
+            auto end = this->interpreter.getPredicatesManager().getContainer().end();
             for (; this->iterator != end; this->iterator++) {
                 auto& predicate = *this->iterator;
 

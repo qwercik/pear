@@ -3,6 +3,14 @@
 #include <pear/pearlog/Predicate.hpp>
 
 namespace pear::pearlog {
-    class RuntimeDefinedPredicate : public Predicate {
+    class BuiltinPredicate : public Predicate {
+    public:
+        BuiltinPredicate(Interpreter& interpreter) :
+            Predicate(interpreter)
+        {
+        }
+
+        class Instance : public Predicate::Instance {
+        };
     };
 }

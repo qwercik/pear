@@ -30,30 +30,28 @@ add_executable(pear
     include/pear/pearlog/Unification.hpp
     include/pear/pearlog/SideUnification.hpp
     include/pear/pearlog/PredicatesManager.hpp
+    include/pear/pearlog/Predicate.hpp
     include/pear/pearlog/BuiltinPredicate.hpp
     include/pear/pearlog/RuntimeDefinedPredicate.hpp
     src/pearlog/Interpreter.cpp
     src/pearlog/Substitution.cpp
     src/pearlog/Unification.cpp
     src/pearlog/SideUnification.cpp
+    src/pearlog/Predicate.cpp
     src/pearlog/PredicatesManager.cpp
     src/pearlog/RuntimeDefinedPredicate.cpp
 
     include/pear/pearlog/predicates/Module.hpp
-    include/pear/pearlog/predicates/Call.hpp
-    include/pear/pearlog/predicates/Print.hpp
+        include/pear/pearlog/predicates/Print.hpp
     include/pear/pearlog/predicates/False.hpp
     include/pear/pearlog/predicates/True.hpp
-    include/pear/pearlog/predicates/Eval.hpp
-    include/pear/pearlog/predicates/And.hpp
+        include/pear/pearlog/predicates/And.hpp
     include/pear/pearlog/predicates/Or.hpp
     src/pearlog/predicates/Module.cpp
-    src/pearlog/predicates/Call.cpp
-    src/pearlog/predicates/Print.cpp
+        src/pearlog/predicates/Print.cpp
     src/pearlog/predicates/False.cpp
     src/pearlog/predicates/True.cpp
-    src/pearlog/predicates/Eval.cpp
-    src/pearlog/predicates/And.cpp
+        src/pearlog/predicates/And.cpp
     src/pearlog/predicates/Or.cpp
 )
 target_include_directories(pear PUBLIC include/)

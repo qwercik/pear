@@ -1,16 +1,28 @@
 #pragma once
 
+#include <stack>
 #include <pear/ast/Term.hpp>
 #include <pear/pearlog/BuiltinPredicate.hpp>
 #include <pear/pearlog/Interpreter.hpp>
 
 namespace pear::pearlog::predicates {
-    class Call : public RuntimeDefinedPredicate {
+    class Call : public BuiltinPredicate {
     public:
-        bool unify(const ast::Term::Pointer& term) const override;
+        class Instance : public BuiltinPredicate::Instance {
+        public:
+            Instance(Interpreter& interpreter, const ast::Term::Pointer& term);
+            bool next() override;
 
-        void in(Interpreter& interpreter, const ast::Term::Pointer& term) override;
-        bool next() override;
-        void out() override;
+        private:
+            Interpreter& interpreter;
+            const ast::Term::Pointer& child;
+            PredicatesManager::ConstIterator iterator;
+            bool predicateInitialized;
+        };
+
+        explicit Call(Interpreter& interpreter);
+
+        std::unique_ptr<Predicate::Instance> createInstanceBackend(const ast::Term::Pointer& term) const override;
+        bool unify(const ast::Term::Pointer& term) const override;
     };
 }

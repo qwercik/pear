@@ -1,4 +1,3 @@
-#include <pear/ast/Term.hpp>
 #include <pear/pearlog/Predicate.hpp>
 #include <pear/pearlog/PredicatesManager.hpp>
 #include <iostream>

@@ -1,15 +1,24 @@
+#include <memory>
 #include <pear/ast/Term.hpp>
 #include <pear/pearlog/predicates/False.hpp>
-#include <iostream>
 
 namespace pear::pearlog::predicates {
-    bool False::unify(const ast::Term::Pointer& term) const {
-        return term->getType() == ast::Term::Type::FUNCTION &&
-            term->getLexeme().getContent() == "false" &&
-            term->getChildren().empty();
+    False::False(Interpreter& interpreter) :
+            BuiltinPredicate(interpreter)
+    {
     }
 
-    bool False::execute(Interpreter& interpreter, const ast::Term::Pointer& term) const {
+    bool False::unify(const ast::Term::Pointer& term) const {
+        return term->getType() == ast::Term::Type::FUNCTION &&
+               term->getLexeme().getContent() == "true" &&
+               term->getChildren().empty();
+    }
+
+    std::unique_ptr<Predicate::Instance> False::createInstanceBackend(const ast::Term::Pointer& term) const {
+        return std::make_unique<False::Instance>();
+    }
+
+    bool False::Instance::next() {
         return false;
     }
 }
