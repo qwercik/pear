@@ -2,6 +2,8 @@
 #include <pear/pearlog/Predicate.hpp>
 #include <pear/pearlog/predicates/Call.hpp>
 #include <pear/ast/Function.hpp>
+#include <iostream>
+#include <pear/ast/TermPrinter.hpp>
 
 namespace pear::pearlog::predicates {
     Call::Call(Interpreter& interpreter) :
@@ -19,7 +21,7 @@ namespace pear::pearlog::predicates {
 
     Call::Instance::Instance(Interpreter& interpreter, const ast::Term::Pointer& term) :
         interpreter(interpreter),
-        child(term->getChildren().front()),
+        child(term->getChildren().front()->clone()),
         iterator(interpreter.getPredicatesManager().getContainer().begin())
     {
     }
@@ -28,7 +30,6 @@ namespace pear::pearlog::predicates {
         auto end = this->interpreter.getPredicatesManager().getContainer().end();
         for (; this->iterator != end; this->iterator++) {
             const auto& predicate = *this->iterator;
-
             if (!this->childInstance) {
                 if (!predicate->unify(child)) {
                     continue;

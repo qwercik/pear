@@ -13,7 +13,7 @@ namespace pear::pearlog::predicates {
             bool next() override;
 
         private:
-            const ast::Term::Pointer& term;
+            ast::Term::Pointer term;
             bool alreadyCalled = false;
         };
 

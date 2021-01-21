@@ -2,7 +2,8 @@
 #include <pear/ast/Function.hpp>
 #include <pear/pearlog/predicates/Or.hpp>
 #include <pear/pearlog/predicates/Call.hpp>
-
+#include <pear/ast/TermPrinter.hpp>
+#include <iostream>
 
 namespace pear::pearlog::predicates {
     Or::Or(Interpreter& interpreter) :
@@ -21,15 +22,16 @@ namespace pear::pearlog::predicates {
 
     Or::Instance::Instance(Interpreter& interpreter, const ast::Term::Pointer& term) :
         interpreter(interpreter),
-        term(term),
-        iterator(term->getChildren().cbegin())
+        term(term->clone()),
+        childIterator(term->getChildren().cbegin()),
+        endIterator(term->getChildren().cend())
     {
     }
 
     bool Or::Instance::next() {
-        for (; this->iterator != term->getChildren().cend(); this->iterator++) {
+        for (; this->childIterator != endIterator; this->childIterator++) {
             if (!this->childInstance) {
-                this->childInstance = predicates::Call(this->interpreter).createCaller(*this->iterator);
+                this->childInstance = predicates::Call(this->interpreter).createCaller(*this->childIterator);
             }
 
             if (this->childInstance->next()) {

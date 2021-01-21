@@ -2,6 +2,8 @@
 #include <pear/pearlog/Predicate.hpp>
 #include <pear/pearlog/predicates/And.hpp>
 #include <pear/pearlog/predicates/Call.hpp>
+#include <iostream>
+#include <pear/ast/TermPrinter.hpp>
 
 namespace pear::pearlog::predicates {
     And::And(Interpreter& interpreter) :
@@ -19,14 +21,14 @@ namespace pear::pearlog::predicates {
 
     And::Instance::Instance(Interpreter& interpreter, const ast::Term::Pointer& term) :
         interpreter(interpreter),
-        term(term),
-        currentChild(term->getChildren().cbegin())
+        term(term->clone()),
+        currentChild(term->getChildren().cbegin()),
+        lastChild(std::next(term->getChildren().cend(), -1))
     {
+        this->childInstances.push(nullptr);
     }
 
     bool And::Instance::next() {
-        this->childInstances.push(nullptr);
-
         while (!this->childInstances.empty()) {
             auto& currentInstance = this->childInstances.top();
 
@@ -35,7 +37,7 @@ namespace pear::pearlog::predicates {
             }
 
             if (currentInstance->next()) {
-                if (this->currentChild == this->term->getChildren().cend()) {
+                if (this->currentChild == this->lastChild) {
                     return true;
                 } else {
                     this->currentChild++;

@@ -16,7 +16,7 @@ namespace pear::pearlog::predicates {
             static bool isQuery(const ast::Term::Pointer& pointer);
 
             Interpreter& interpreter;
-            const ast::Term::Pointer& term;
+            const ast::Term::Pointer term;
             bool alreadyCalled = false;
         };
 

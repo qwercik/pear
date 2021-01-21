@@ -14,8 +14,9 @@ namespace pear::pearlog::predicates {
 
         private:
             Interpreter& interpreter;
-            const ast::Term::Pointer& term;
-            std::list<ast::Term::Pointer>::const_iterator iterator;
+            const ast::Term::Pointer term;
+            std::list<ast::Term::Pointer>::const_iterator childIterator;
+            std::list<ast::Term::Pointer>::const_iterator endIterator;
             std::unique_ptr<Predicate::Instance> childInstance;
         };
 

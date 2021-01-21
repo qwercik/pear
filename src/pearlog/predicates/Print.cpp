@@ -18,13 +18,17 @@ namespace pear::pearlog::predicates {
     }
 
     Print::Instance::Instance(const ast::Term::Pointer& term) :
-        term(term)
+        term(term->clone())
     {
     }
 
     bool Print::Instance::next() {
         if (this->alreadyCalled) {
             return false;
+        }
+
+        if (term->getChildren().empty()) {
+            std::cout << '\n';
         }
 
         for (const auto& argument : term->getChildren()) {

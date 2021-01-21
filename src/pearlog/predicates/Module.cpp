@@ -1,6 +1,9 @@
 #include <iostream>
 #include <pear/ast/Term.hpp>
 #include <pear/pearlog/predicates/Module.hpp>
+#include <pear/pearlog/predicates/Call.hpp>
+#include <iostream>
+#include <pear/ast/TermPrinter.hpp>
 
 namespace pear::pearlog::predicates {
     Module::Module(Interpreter& interpreter) :
@@ -19,7 +22,8 @@ namespace pear::pearlog::predicates {
 
     Module::Instance::Instance(Interpreter& interpreter, const ast::Term::Pointer& term) :
             interpreter(interpreter),
-            term(term)
+            term(term->clone()),
+            alreadyCalled(false)
     {
     }
 
@@ -37,7 +41,9 @@ namespace pear::pearlog::predicates {
         for (const auto& moduleEntry : term->getChildren()) {
             if (this->isQuery(moduleEntry)) {
                 const auto& queryTerm = moduleEntry->getChildren().front();
-                interpreter.execute(queryTerm);
+                auto instance = predicates::Call(this->interpreter).createCaller(queryTerm);
+                while (instance->next()) {
+                }
             }
         }
 
