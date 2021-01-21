@@ -39,6 +39,7 @@ namespace pear::pearlog::predicates {
             }
 
             if (this->childInstance->next()) {
+                this->substitutions.insert(this->substitutions.begin(), this->childInstance->getSubstitutions().begin(), this->childInstance->getSubstitutions().end());
                 this->iterator++;
                 return true;
             }

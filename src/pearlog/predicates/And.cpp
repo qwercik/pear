@@ -33,10 +33,17 @@ namespace pear::pearlog::predicates {
             auto& currentInstance = this->childInstances.top();
 
             if (!currentInstance) {
-                currentInstance = predicates::Call(this->interpreter).createCaller(*this->currentChild);
+                auto callTerm = (*this->currentChild)->clone();
+                for (const auto& substitution : this->substitutions) {
+                    substitution.apply(callTerm);
+                }
+
+                currentInstance = predicates::Call(this->interpreter).createCaller(callTerm);
             }
 
             if (currentInstance->next()) {
+                this->substitutions.insert(this->substitutions.end(), currentInstance->getSubstitutions().begin(), currentInstance->getSubstitutions().end());
+
                 if (this->currentChild == this->lastChild) {
                     return true;
                 } else {

@@ -32,8 +32,10 @@ namespace pear::pearlog::predicates {
         }
 
         for (const auto& argument : term->getChildren()) {
-            std::cout << ast::TermPrinter(argument) << '\n';
+            std::cout << ast::TermPrinter(argument) << ' ';
         }
+
+        std::cout << '\n';
 
         this->alreadyCalled = true;
         return true;

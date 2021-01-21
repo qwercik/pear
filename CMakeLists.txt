@@ -33,6 +33,7 @@ add_executable(pear
     include/pear/pearlog/Predicate.hpp
     include/pear/pearlog/BuiltinPredicate.hpp
     include/pear/pearlog/RuntimeDefinedPredicate.hpp
+    include/pear/pearlog/UnificationPrinter.hpp
     src/pearlog/Interpreter.cpp
     src/pearlog/Substitution.cpp
     src/pearlog/Unification.cpp
@@ -40,6 +41,7 @@ add_executable(pear
     src/pearlog/Predicate.cpp
     src/pearlog/PredicatesManager.cpp
     src/pearlog/RuntimeDefinedPredicate.cpp
+    src/pearlog/UnificationPrinter.cpp
 
     include/pear/pearlog/predicates/Module.hpp
     include/pear/pearlog/predicates/Print.hpp

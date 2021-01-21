@@ -6,6 +6,7 @@
 #include <iostream>
 #include <pear/ast/TermPrinter.hpp>
 #include <pear/pearlog/Unification.hpp>
+#include <pear/pearlog/UnificationPrinter.hpp>
 
 namespace pear::pearlog::predicates {
     Unify::Unify(Interpreter& interpreter) :
@@ -29,14 +30,16 @@ namespace pear::pearlog::predicates {
     }
 
     bool Unify::Instance::next() {
-        if (alreadyCalled) {
+        if (this->alreadyCalled) {
             return false;
         }
 
-        auto result = Unification(this->first, this->second).getResult().getSubstitutions();
-        this->substitutions.insert(this->substitutions.begin(), result.begin(), result.end());
+        auto unification = Unification(this->first, this->second);
+        auto& result = unification.getResult();
 
-        alreadyCalled = true;
+        this->substitutions.insert(this->substitutions.begin(), result.getSubstitutions().begin(), result.getSubstitutions().end());
+
+        this->alreadyCalled = true;
         return true;
     }
 }
