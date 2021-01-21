@@ -9,10 +9,12 @@
 #include <pear/pearlog/predicates/Or.hpp>
 #include <pear/pearlog/predicates/Print.hpp>
 #include <iostream>
+#include <pear/pearlog/predicates/Unify.hpp>
 
 namespace pear::pearlog {
     Interpreter::Interpreter() {
         this->predicatesManager.insertBack(std::make_shared<predicates::Call>(*this));
+        this->predicatesManager.insertBack(std::make_shared<predicates::Unify>(*this));
         this->predicatesManager.insertBack(std::make_shared<predicates::And>(*this));
         this->predicatesManager.insertBack(std::make_shared<predicates::Or>(*this));
         this->predicatesManager.insertBack(std::make_shared<predicates::Print>(*this));

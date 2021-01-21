@@ -48,6 +48,7 @@ add_executable(pear
     include/pear/pearlog/predicates/And.hpp
     include/pear/pearlog/predicates/Or.hpp
     include/pear/pearlog/predicates/Call.hpp
+    include/pear/pearlog/predicates/Unify.hpp
     src/pearlog/predicates/Module.cpp
     src/pearlog/predicates/Print.cpp
     src/pearlog/predicates/False.cpp
@@ -55,6 +56,7 @@ add_executable(pear
     src/pearlog/predicates/And.cpp
     src/pearlog/predicates/Or.cpp
     src/pearlog/predicates/Call.cpp
+    src/pearlog/predicates/Unify.cpp
 )
 target_include_directories(pear PUBLIC include/)
 

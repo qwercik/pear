@@ -37,7 +37,15 @@ namespace pear::pearlog {
         return this->destination;
     }
 
+    const ast::Term::Pointer& Substitution::getDestination() const {
+        return this->destination;
+    }
+
     ast::Term::Pointer& Substitution::getSource() {
+        return this->source;
+    }
+
+    const ast::Term::Pointer& Substitution::getSource() const {
         return this->source;
     }
 }

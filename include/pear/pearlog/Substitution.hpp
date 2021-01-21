@@ -14,7 +14,9 @@ namespace pear::pearlog {
         void apply(Substitution& substitution) const;
  
         ast::Term::Pointer& getDestination();
+        const ast::Term::Pointer& getDestination() const;
         ast::Term::Pointer& getSource();
+        const ast::Term::Pointer& getSource() const;
 
     private:
         std::unique_ptr<ast::Term> destination;
