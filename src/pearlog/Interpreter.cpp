@@ -8,6 +8,7 @@
 #include <pear/pearlog/predicates/And.hpp>
 #include <pear/pearlog/predicates/Or.hpp>
 #include <pear/pearlog/predicates/Print.hpp>
+#include <pear/pearlog/predicates/Eval.hpp>
 #include <iostream>
 #include <pear/pearlog/predicates/Unify.hpp>
 
@@ -18,6 +19,7 @@ namespace pear::pearlog {
         this->predicatesManager.insertBack(std::make_shared<predicates::And>(*this));
         this->predicatesManager.insertBack(std::make_shared<predicates::Or>(*this));
         this->predicatesManager.insertBack(std::make_shared<predicates::Print>(*this));
+        this->predicatesManager.insertBack(std::make_shared<predicates::Eval>(*this));
         this->predicatesManager.insertBack(std::make_shared<predicates::Module>(*this));
         this->predicatesManager.insertBack(std::make_shared<predicates::False>(*this));
         this->predicatesManager.insertBack(std::make_shared<predicates::True>(*this));

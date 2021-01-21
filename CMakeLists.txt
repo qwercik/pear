@@ -44,6 +44,7 @@ add_executable(pear
     src/pearlog/UnificationPrinter.cpp
 
     include/pear/pearlog/predicates/Module.hpp
+    include/pear/pearlog/predicates/Eval.hpp
     include/pear/pearlog/predicates/Print.hpp
     include/pear/pearlog/predicates/False.hpp
     include/pear/pearlog/predicates/True.hpp
@@ -52,6 +53,7 @@ add_executable(pear
     include/pear/pearlog/predicates/Call.hpp
     include/pear/pearlog/predicates/Unify.hpp
     src/pearlog/predicates/Module.cpp
+    src/pearlog/predicates/Eval.cpp
     src/pearlog/predicates/Print.cpp
     src/pearlog/predicates/False.cpp
     src/pearlog/predicates/True.cpp
