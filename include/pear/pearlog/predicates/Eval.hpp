@@ -14,6 +14,12 @@ namespace pear::pearlog::predicates {
 
         private:
             static bool evaluateTree(const ast::Term::Pointer& term, double& result);
+            static bool evaluateLeftAssociative(const ast::Term::Pointer& term, double& result, std::function<bool(double, double, double&)> callback);
+            static bool evaluateRightAssociative(const ast::Term::Pointer& term, double& result, std::function<bool(double, double, double&)> callback);
+
+            static const std::unordered_map<std::string, std::function<bool(double, double&)>> unaryFunctions;
+            static const std::unordered_map<std::string, std::function<bool(double, double, double&)>> leftAssociatedFunctions;
+            static const std::unordered_map<std::string, std::function<bool(double, double, double&)>> rightAssociatedFunctions;
 
             ast::Term::Pointer expression;
             ast::Term::Pointer result;

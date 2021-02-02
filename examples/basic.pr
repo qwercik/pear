@@ -1,11 +1,11 @@
 module(
     author('Eryk Andrzejewski'),
     query(and(
-        print('Welcome to the basic example'),
-        unify(x, 3),
-        unify(y, 7),
-        eval(add(x, y), z)
-        print(add(x, y), z)
+        unify(expression, mul(4, atan(1))),
+        eval(expression, result),
+        print(expression, '=', result),
+        false,
+        unify(expression, div(add(1, 2, sub(997, mul(112, 3))), 2.7))
     ))
 )
 
